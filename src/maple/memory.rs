@@ -1,14 +1,14 @@
-use crate::maple::cpu::{CPU, ExecutionMode, MapleCPU, REGISTER_PAGE_TABLE_BASE};
+use crate::maple::{cpu::{CPU, ExecutionMode, MapleCPU}, interrupt_codes::{INTERRUPT_CODE_PAGE_FAULT}};
 
 pub struct Memory {
     memory: Vec<u64>,
-}
 
+}
 impl Memory {
     pub fn new(size: u32) -> Self {
         Memory {
             memory: vec![0; size as usize],
-    }
+        }
     }
 }
 
@@ -26,7 +26,8 @@ impl Memory {
         }
         self.memory[memory_address as usize] = value;
     }
-    fn virtual_to_physical(&self, address: u32, page_table_base: u32) -> u32 {
+
+    fn virtual_to_physical(&self, address: u32, page_table_base: u32, cpu: &mut MapleCPU) -> u32 {
         let page_offset = address & 0xFFF; // The last twelve bits
         let page_table_index = (address >> 12) & 0x3FF; // The next ten bits
         let page_directory_index = (address >> 22) & 0x3FF; // The next ten bits
@@ -35,31 +36,38 @@ impl Memory {
 
         // Table base = index = address of page table
         let page_directory_pointer = page_table_base + page_directory_index;
-        let page_table_address = self.get(page_directory_pointer) as u32;
+        let page_table_address = (self.get(page_directory_pointer) & 0xFFFFFFFF)  as u32;
 
         // Address of page table + table offset = page address
         let page_table_pointer = page_table_address + page_table_index;
-        let page_address = self.get(page_table_pointer) as u32;
+        let page_address = (self.get(page_table_pointer) & 0xFFFFFFFF) as u32;
+
+        // The first 32 bits of the first entries determine the lenght which may not be exceeded. 
+        let directory_length = (self.get(page_table_base) >> 32) as u32;
+        let page_table_length = (self.get(page_table_address) >> 32) as u32;
+
+        if page_table_address == 0 || page_address == 0 || page_directory_index > directory_length || page_table_length > page_table_index {
+            cpu.raise_interrupt(INTERRUPT_CODE_PAGE_FAULT as u32);
+            return 0;
+        }
 
         // Page address = page offset = Physical address
         return page_address + page_offset;
     }
 
-
-    pub fn read(&self, address: u32, cpu: &MapleCPU) -> u64 {
-        let table_base: u32 = cpu.get_page_table_base().try_into().unwrap();
-        let actual_address = self.virtual_to_physical(address, table_base);
-
-        match cpu.mode {
+    pub fn read(&self, address: u32, cpu: &mut MapleCPU) -> u64 {
+        let actual_address: u32 = match cpu.mode {
             ExecutionMode::User => {
+                let table_base: u32 = cpu.get_page_table_base().try_into().unwrap();
+                let result = self.virtual_to_physical(address, table_base, cpu);
+                if result == 0 {
+                    return 0;
+                }
+                result
+            }, ExecutionMode::Kernel => address
+        };
 
-            },
-            ExecutionMode::Kernel => {
-
-            }
-        }
-
-        return 0;
+        return self.get(actual_address)
     }
 
     pub fn write(&mut self, address: u32, value: u64) {

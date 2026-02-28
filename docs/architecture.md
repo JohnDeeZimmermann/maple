@@ -1,6 +1,7 @@
 # Memory
 
-Even though instructions, registers and data stored are defined as 64 bit values, the address space of our memory is limited to 32 bit. This includes both program code and data values. The _Stack_ shrinks in this context.
+Even though instructions, registers and data stored are defined as 64 bit values, the address space of our memory is limited to 32 bit.
+This includes both program code and data values. The _Stack_ shrinks.
 
 ## Pages
 
@@ -9,6 +10,10 @@ We employ two layer page tables where each page is 4kb (or 4096 bytes). Therefor
 - The first 10 bits pointing to the page directory
 - The next 10 bits pointing to the page table within the directory
 - The last 12 bits being reserved as an offset
+
+The last 32 bits of all entries in the page directories and page tables indicate the resolving address.
+The first entry of each page directory or page table indicate the length of the table using the first 32 bits. 
+If a program tries to access a page that is larger than allowed by the specified length, a page fault interrupt is raised. 
 
 # Registers
 
@@ -27,6 +32,7 @@ We have several general-purpose registers `r0` to `r5`. These can be used for an
 | `sy`         | System info register - Contains address of interrupt tables and the current user mode      | `1100`           |
 | `fp`         | Frame Pointer - Points to the beginning of the current stack frame.                        | `1001`           |
 | `h0` to `h1` | Hardware Register - These registers are reserved for specific hardware functions.          | `1110` to `1111` |
+
 
 # Instructions
 
@@ -59,7 +65,12 @@ We have several general-purpose registers `r0` to `r5`. These can be used for an
 | Software Interrupt                      | `SWI code`                                                                    | Causes a software interrupt with the given code. The code defines the offset in the software interrupt table defined in the system info register.                                       | `0001 1000` |
 | Return from Interrupt                   | `RFI`                                                                         | Sets the program counter back to the last value before any interrupts occured and enters user mode.                                                                                     | `0001 1001` |
 
-Other instructions in the future: `SWI`
+
+# Interrupts
+
+|Name|Purpose|ID|
+|---|---|---|
+|Page Fault | Indicates an illegal access to non-reserved memory space | 1001 |
 
 # Modes
 

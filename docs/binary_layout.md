@@ -38,3 +38,12 @@ These are the flags set:
 ```
 000000 | STORAGE-DVC (4) | GPU-DVC(4) | IO-DEVICES (4) | INTERRUPT-CODE (8) | INTERRUPT-RESULT (32) | SYS-STATUS(1) | PARITY(1) | EVEN(1) | NEGATIVE(1) | ZERO(1) | OVERFLOW (1) 
 ```
+
+### System Info Register
+
+The first 16 bits of the `sy` register contain the address of the interrupt table (`interrupt_table_base`).
+In case of an interrupt, the program counter is set to the address specified + the code of the interrupt.
+
+The next 16 bits of the `sy` register contain the length of the interrupt table (`interrupt_table_length`). 
+If an interrupt is raised with a code larger than `interrupt_table_length`, an interrupt is raised. 
+

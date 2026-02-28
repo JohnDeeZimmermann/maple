@@ -4,7 +4,7 @@ pub enum ExecutionMode {
 }
 
 pub trait CPU {
-    fn raise_interrupt(&mut self, code: u64);
+    fn raise_interrupt(&mut self, code: u32);
 
     fn get_stack_pointer(&self) -> u64;
     fn set_stack_pointer(&mut self, value: u64);
@@ -64,8 +64,12 @@ impl MapleCPU {
 }
 
 impl CPU for MapleCPU {
-    fn raise_interrupt(&mut self, code: u64) {
-        todo!()
+    fn raise_interrupt(&mut self, code: u32) {
+        let interrupt_table_base = self.get_system_info() >> (64 - 16); // First 16 bits represent the
+
+        let result = interrupt_table_base + (code as u64);
+
+        self.set_program_counter(result);
     }
 
     fn get_stack_pointer(&self) -> u64 {
@@ -136,15 +140,16 @@ impl CPU for MapleCPU {
         if gp < 6 {
             return self.registers[gp];
         }
-        panic!("Invalid general purpose register {}", gp);
+        panic!("Invalid GP register {}", gp); // Panicing expected as that simply should
+                                              // never happen at runtime
     }
 
     fn set_gp_register(&mut self, gp: usize, value: u64) {
-        if gp >= 6 {
-            panic!("Invalid general purpose register {}", gp);
-        }
+        let mut gp = gp;
         if gp < 6 {
             self.registers[gp] = value;
+        } else {
+            panic!("Invalid GP register {}", gp);
         }
     }
 
@@ -153,16 +158,16 @@ impl CPU for MapleCPU {
         if hw < 2 {
             return self.registers[hw_base + hw];
         }
-        panic!("Invalid hardware register {}", hw);
+        panic!("Invalid hardware register {}", hw); // Panicing expected as that simply should
+                                                    // never happen at runtime
     }
 
     fn set_hw_register(&mut self, hw: usize, value: u64) {
-        if hw >= 6 {
-            panic!("Invalid general purpose register {}", gp);
-        }
         let hw_base = 14;
         if hw < 2 {
             self.registers[hw_base + hw] = value;
+        } else {
+            panic!("Invalid hardware register {}", hw);
         }
     }
 

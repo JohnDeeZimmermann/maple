@@ -17,7 +17,7 @@ impl Memory {
         if memory_address >= self.memory.len() as u32 {
             panic!("Memory access out of bounds");
         }
-        return self.memory[memory_address as usize]
+        self.memory[memory_address as usize]
     }
 
     fn set(&mut self, memory_address: u32, value: u64) {
@@ -42,7 +42,7 @@ impl Memory {
         let page_table_pointer = page_table_address + page_table_index;
         let page_address = (self.get(page_table_pointer) & 0xFFFFFFFF) as u32;
 
-        // The first 32 bits of the first entries determine the lenght which may not be exceeded. 
+        // The first 32 bits of the first entries determine the length which may not be exceeded.
         let directory_length = (self.get(page_table_base) >> 32) as u32;
         let page_table_length = (self.get(page_table_address) >> 32) as u32;
 
@@ -67,10 +67,21 @@ impl Memory {
             }, ExecutionMode::Kernel => address
         };
 
-        return self.get(actual_address)
+        self.get(actual_address)
     }
 
-    pub fn write(&mut self, address: u32, value: u64) {
-        // Implementation of write function
+    pub fn write(&mut self, address: u32, cpu: &mut MapleCPU) {
+        let actual_address: u32 = match cpu.mode {
+            ExecutionMode::User => {
+                let table_base: u32 = cpu.get_page_table_base().try_into().unwrap();
+                let result = self.virtual_to_physical(address, table_base, cpu);
+                if result == 0 {
+                    return;
+                }
+                result
+            }, ExecutionMode::Kernel => address
+        };
+
+        self.set(actual_address, cpu.get_result());
     }
 }

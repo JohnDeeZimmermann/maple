@@ -1,9 +1,22 @@
+use crate::maple::memory::Memory;
+use crate::maple::instructions;
+
 pub enum ExecutionMode {
     User,
     Kernel,
 }
 
+pub enum ExecutionResult {
+    Ok,
+    Exit
+}
+
 pub trait CPU {
+
+    fn process(&mut self, memory: &mut Memory) -> ExecutionResult;
+    fn fetch(&mut self, memory: &mut Memory) -> u64;
+    fn decode_and_execute(&mut self, memory: &mut Memory, instruction: u64) -> ExecutionResult;
+
     fn raise_interrupt(&mut self, code: u32);
 
     fn get_stack_pointer(&self) -> u64;
@@ -40,14 +53,14 @@ pub trait CPU {
     fn set_register(&mut self, register: usize, value: u64);
 }
 
-pub const REGISTER_STACK_POINTER: usize = 6;
-pub const REGISTER_PROGRAM_COUNTER: usize = 7;
-pub const REGISTER_DYNAMIC_LINK: usize = 8;
-pub const REGISTER_RESULT: usize = 9;
-pub const REGISTER_IO_POINTER: usize = 10;
-pub const REGISTER_PAGE_TABLE_BASE: usize = 11;
-pub const REGISTER_SYSTEM_INFO: usize = 12;
-pub const REGISTER_FRAME_POINTER: usize = 13;
+const REGISTER_STACK_POINTER: usize = 6;
+const REGISTER_PROGRAM_COUNTER: usize = 7;
+const REGISTER_DYNAMIC_LINK: usize = 8;
+const REGISTER_RESULT: usize = 9;
+const REGISTER_IO_POINTER: usize = 10;
+const REGISTER_PAGE_TABLE_BASE: usize = 11;
+const REGISTER_SYSTEM_INFO: usize = 12;
+const REGISTER_FRAME_POINTER: usize = 13;
 
 pub struct MapleCPU {
     pub mode: ExecutionMode,
@@ -64,8 +77,23 @@ impl MapleCPU {
 }
 
 impl CPU for MapleCPU {
+    fn process(&mut self, memory: &mut Memory) -> ExecutionResult {
+        let instruction = self.fetch(memory);
+        self.decode_and_execute(memory, instruction)
+    }
+
+    fn fetch(&mut self, memory: &mut Memory) -> u64 {
+        let address = self.get_program_counter() as u32;
+        memory.read(address, self)
+    }
+
+    fn decode_and_execute(&mut self, memory: &mut Memory, instruction: u64) -> ExecutionResult {
+        todo!()
+    }
+
     fn raise_interrupt(&mut self, code: u32) {
-        let interrupt_table_base = self.get_system_info() >> (64 - 16); // First 16 bits represent the
+         // First 16 bits represent the address of the interrupt table
+        let interrupt_table_base = self.get_system_info() >> (64 - 16);
 
         let result = interrupt_table_base + (code as u64);
 
@@ -73,7 +101,7 @@ impl CPU for MapleCPU {
     }
 
     fn get_stack_pointer(&self) -> u64 {
-        return self.registers[REGISTER_STACK_POINTER];
+        self.registers[REGISTER_STACK_POINTER]
     }
 
     fn set_stack_pointer(&mut self, value: u64) {
@@ -81,7 +109,7 @@ impl CPU for MapleCPU {
     }
 
     fn get_program_counter(&self) -> u64 {
-        return self.registers[REGISTER_PROGRAM_COUNTER];
+        self.registers[REGISTER_PROGRAM_COUNTER]
     }
 
     fn set_program_counter(&mut self, value: u64) {
@@ -89,7 +117,7 @@ impl CPU for MapleCPU {
     }
 
     fn get_dynamic_link(&self) -> u64 {
-        return self.registers[REGISTER_DYNAMIC_LINK];
+        self.registers[REGISTER_DYNAMIC_LINK]
     }
 
     fn set_dynamic_link(&mut self, value: u64) {
@@ -97,7 +125,7 @@ impl CPU for MapleCPU {
     }
 
     fn get_result(&self) -> u64 {
-        return self.registers[REGISTER_RESULT];
+        self.registers[REGISTER_RESULT]
     }
 
     fn set_result(&mut self, value: u64) {
@@ -105,7 +133,7 @@ impl CPU for MapleCPU {
     }
 
     fn get_io_pointer(&self) -> u64 {
-        return self.registers[REGISTER_IO_POINTER];
+        self.registers[REGISTER_IO_POINTER]
     }
 
     fn set_io_pointer(&mut self, value: u64) {
@@ -113,7 +141,7 @@ impl CPU for MapleCPU {
     }
 
     fn get_page_table_base(&self) -> u64 {
-        return self.registers[REGISTER_PAGE_TABLE_BASE];
+        self.registers[REGISTER_PAGE_TABLE_BASE]
     }
 
     fn set_page_table_base(&mut self, value: u64) {
@@ -121,7 +149,7 @@ impl CPU for MapleCPU {
     }
 
     fn get_system_info(&self) -> u64 {
-        return self.registers[REGISTER_SYSTEM_INFO];
+        self.registers[REGISTER_SYSTEM_INFO]
     }
 
     fn set_system_info(&mut self, value: u64) {
@@ -129,7 +157,7 @@ impl CPU for MapleCPU {
     }
 
     fn get_frame_pointer(&self) -> u64 {
-        return self.registers[REGISTER_FRAME_POINTER];
+        self.registers[REGISTER_FRAME_POINTER]
     }
 
     fn set_frame_pointer(&mut self, value: u64) {
@@ -140,7 +168,7 @@ impl CPU for MapleCPU {
         if gp < 6 {
             return self.registers[gp];
         }
-        panic!("Invalid GP register {}", gp); // Panicing expected as that simply should
+        panic!("Invalid GP register {}", gp); // Panicking expected as that simply should
                                               // never happen at runtime
     }
 
@@ -158,7 +186,7 @@ impl CPU for MapleCPU {
         if hw < 2 {
             return self.registers[hw_base + hw];
         }
-        panic!("Invalid hardware register {}", hw); // Panicing expected as that simply should
+        panic!("Invalid hardware register {}", hw); // Panicking expected as that simply should
                                                     // never happen at runtime
     }
 

@@ -65,13 +65,6 @@ We have several general-purpose registers `r0` to `r5`. These can be used for an
 | Software Interrupt                      | `SWI code`                                                                    | Causes a software interrupt with the given code. The code defines the offset in the software interrupt table defined in the system info register.                                       | `0001 1000` |
 | Return from Interrupt                   | `RFI`                                                                         | Sets the program counter back to the last value before any interrupts occured and enters user mode.                                                                                     | `0001 1001` |
 
-
-# Interrupts
-
-|Name|Purpose|ID|
-|---|---|---|
-|Page Fault | Indicates an illegal access to non-reserved memory space | 1001 |
-
 # Modes
 
 The CPU operates in two modes: User Mode and Kernel Mode.

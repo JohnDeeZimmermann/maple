@@ -47,7 +47,7 @@ impl Memory {
         let page_table_length = (self.get(page_table_address) >> 32) as u32;
 
         if page_table_address == 0 || page_address == 0 || page_directory_index > directory_length || page_table_length > page_table_index {
-            cpu.raise_interrupt(INTERRUPT_CODE_PAGE_FAULT as u32);
+            cpu.raise_interrupt(INTERRUPT_CODE_PAGE_FAULT);
             return 0;
         }
 
@@ -70,7 +70,7 @@ impl Memory {
         self.get(actual_address)
     }
 
-    pub fn write(&mut self, address: u32, cpu: &mut MapleCPU) {
+    pub fn write(&mut self, address: u32, value: u64, cpu: &mut MapleCPU) {
         let actual_address: u32 = match cpu.mode {
             ExecutionMode::User => {
                 let table_base: u32 = cpu.get_page_table_base().try_into().unwrap();
@@ -82,6 +82,6 @@ impl Memory {
             }, ExecutionMode::Kernel => address
         };
 
-        self.set(actual_address, cpu.get_result());
+        self.set(actual_address, value);
     }
 }

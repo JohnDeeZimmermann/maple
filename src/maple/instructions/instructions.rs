@@ -20,11 +20,11 @@ pub fn execute_instruction(
     memory: &mut Memory,
     instruction: u64,
 ) -> ExecutionResult {
-    let op_code = (instruction >> 48) as u8; // First 8 bits from the left represent the op code
+    let op_code = extract_from_binary_left(instruction, 8, 0) as u8;
 
     // Move instructions have a different layout
     if op_code == OP_CODE_MOVE {
-        execute_move_instruction(cpu, memory, instruction);
+        execute_move_instruction(cpu, instruction);
         return ExecutionResult::Ok
     }
 

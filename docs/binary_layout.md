@@ -18,11 +18,12 @@ Each argument also contains an additional bit (to the right) which determines wh
 OPCODE   OPT  DEST ARG1 (As register)      R ARG2 (Directly)         R
 ```
 ### Move, Move Not
-In order to store larger values (e.g. memory addresses exceeding 23 bits in size),MOV and MVN have a slightly different layout. 
 ```
-OPCODE (8) | OPTIONS (1) | RDEST (4) | VALUE (50 + 1)
+OPCODE (8) | OPTIONS (1) | RDEST (4) | SIGN(1) | VALUE (49 + 1)
 ```
-_To achieve larger even larger addresses, one could always adjust the offset values or perform add operations. Our implementation does however only support 32-bit memory addresses ($2^{32}$ words or $8*2^{32}=2^{36}$ bytes_)
+The sign bit represents the MSB of the resulting value stored. An OR operation is performed on the MSB, regardless whether a register value is imported or not.
+
+_To achieve larger values, one could always adjust the offset values or perform add operations. Our implementation does however only support 32-bit memory addresses ($2^{32}$ words or $8*2^{32}=2^{36}$ bytes_)
 ##### Example
 `MOV r2, #128` would be translated to:
 ```
@@ -36,7 +37,7 @@ A comparison of `A and B` will simply be populated by the mathematical propertie
 Additionally, it is used to store additonal system information.
 These are the flags set:
 ```
-000000 | STORAGE-DVC (4) | GPU-DVC(4) | IO-DEVICES (4) | INTERRUPT-CODE (8) | INTERRUPT-RESULT (32) | SYS-STATUS(1) | PARITY(1) | EVEN(1) | NEGATIVE(1) | ZERO(1) | OVERFLOW (1) 
+WIP... 000... | PARITY(1) | NEGATIVE(1) | ZERO(1) | OVERFLOW (1) 
 ```
 
 ### System Info Register

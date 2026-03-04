@@ -4,16 +4,20 @@ use crate::maple::interrupt_codes::INTERRUPT_CODE_INVALID_OPCODE;
 use crate::maple::memory::Memory;
 use crate::maple::utils::{extract_from_binary_left, extract_from_binary_right};
 
-struct InstructionArguments {
-    op_code: u8,
-    options: u8,
-    rdest: u8,
-    arg1_raw: u32,
-    arg2_raw: u32
+pub struct InstructionArguments {
+    pub op_code: u8,
+    pub options: u8,
+    pub rdest: u8,
+    pub arg1_raw: u32,
+    pub arg2_raw: u32
 }
 
 const OP_CODE_NOP: u8 = 0;
 const OP_CODE_MOVE: u8 = 1;
+const OP_CODE_ADD_INTEGER: u8 = 2;
+const OP_CODE_SUBTRACT_INTEGER: u8 = 3;
+const OP_CODE_MULTIPLY_INTEGER: u8 = 4;
+const OP_CODE_DIVIDE_INTEGER: u8 = 5;
 
 pub fn execute_instruction(
     cpu: &mut MapleCPU,

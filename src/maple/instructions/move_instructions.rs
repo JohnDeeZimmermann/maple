@@ -13,8 +13,8 @@ pub fn execute_move_instruction(cpu: &mut MapleCPU, instruction: u64) {
     let value_with_sign = (sign << 63) | actual_value;
 
     if is_move_not {
-        cpu.set_register(rdest, !actual_value);
+        cpu.set_register(rdest, !value_with_sign);
     } else {
-        cpu.set_register(rdest, actual_value);
+        cpu.set_register(rdest, value_with_sign);
     }
 }

@@ -1,4 +1,5 @@
 use crate::maple::cpu::{ExecutionResult, MapleCPU, CPU};
+use crate::maple::instructions::integer_math_instructions::{execute_add_integer_instruction, execute_divide_integer_instruction, execute_multiply_integer_instruction, execute_subtract_integer_instruction};
 use crate::maple::instructions::move_instructions::execute_move_instruction;
 use crate::maple::interrupt_codes::INTERRUPT_CODE_INVALID_OPCODE;
 use crate::maple::memory::Memory;
@@ -45,7 +46,18 @@ pub fn execute_instruction(
         OP_CODE_NOP => {
             // Do nothing
         },
-
+        OP_CODE_ADD_INTEGER => {
+            execute_add_integer_instruction(cpu, &args);
+        },
+        OP_CODE_SUBTRACT_INTEGER => {
+            execute_subtract_integer_instruction(cpu, &args);
+        },
+        OP_CODE_MULTIPLY_INTEGER => {
+            execute_multiply_integer_instruction(cpu, &args);
+        },
+        OP_CODE_DIVIDE_INTEGER => {
+            execute_divide_integer_instruction(cpu, &args);
+        },
         _ => {
             cpu.raise_interrupt(INTERRUPT_CODE_INVALID_OPCODE);
         }

@@ -36,8 +36,8 @@ pub trait CPU {
     fn get_dynamic_link(&self) -> u64;
     fn set_dynamic_link(&mut self, value: u64);
 
-    fn get_result(&self) -> u64;
-    fn set_result(&mut self, value: u64);
+    fn get_result_register(&self) -> u64;
+    fn set_result_register(&mut self, value: u64);
 
     fn get_io_pointer(&self) -> u64;
     fn set_io_pointer(&mut self, value: u64);
@@ -151,11 +151,11 @@ impl CPU for MapleCPU {
         self.set_register(REGISTER_DYNAMIC_LINK, value);
     }
 
-    fn get_result(&self) -> u64 {
+    fn get_result_register(&self) -> u64 {
         self.get_register(REGISTER_RESULT)
     }
 
-    fn set_result(&mut self, value: u64) {
+    fn set_result_register(&mut self, value: u64) {
         self.set_register(REGISTER_RESULT, value);
     }
 

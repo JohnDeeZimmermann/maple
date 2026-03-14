@@ -3,11 +3,18 @@ use crate::maple::cpu::{MapleCPU, CPU};
 use crate::maple::interrupt_codes::INTERRUPT_CODE_ILLEGAL_DIRECT_ARGUMENT;
 
 pub fn extract_from_binary_left(value: u64, section_size: u32, section_left_offset: u64) -> u64 {
-    extract_from_binary_right(value, section_size, 64 - section_left_offset + 1)
+    let section_right_offset = 64_u64 - section_left_offset - section_size as u64;
+    extract_from_binary_right(value, section_size, section_right_offset)
 }
 
 pub fn extract_from_binary_right(value: u64, section_size: u32, section_right_offset: u64) -> u64 {
-    (value >> section_right_offset) & (2_i32.pow(section_size - 1) as u64)
+    let mask = if section_size >= 64 {
+        u64::MAX
+    } else {
+        (1_u64 << section_size) - 1
+    };
+
+    (value >> section_right_offset) & mask
 }
 
 pub fn resolve_potential_register_argument_value(cpu: &MapleCPU, argument: u64) -> u64 {

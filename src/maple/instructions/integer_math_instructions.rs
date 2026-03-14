@@ -37,8 +37,9 @@ pub fn execute_divide_integer_instruction(cpu: &mut MapleCPU, args: &Instruction
     let value_a = resolve_potential_register_argument_value(cpu, args.arg1_raw as u64) as i64;
     let value_b = resolve_potential_register_argument_value(cpu, args.arg2_raw as u64) as i64;
 
-    if (value_b == 0) {
+    if value_b == 0 {
         cpu.raise_interrupt(INTERRUPT_CODE_INVALID_DIVISION_BY_ZERO);
+        return;
     }
 
     let (result, overflowed) = value_a.overflowing_div(value_b);

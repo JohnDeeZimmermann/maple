@@ -218,7 +218,7 @@ impl CPU for MapleCPU {
     }
 
     fn set_register(&mut self, register: u8, value: u64) {
-        if register >= 10 || register <= 12 {
+        if self.mode == ExecutionMode::User && (10..=12).contains(&register) {
             self.raise_interrupt(INTERRUPT_CODE_ILLEGAL_REGISTER_MODIFICATION);
             return;
         }

@@ -65,3 +65,13 @@ pub fn execute_instruction(
 
     ExecutionResult::Ok
 }
+
+pub fn create_basic_instruction(args: InstructionArguments) -> u64 {
+    let op_code = (args.op_code as u64 & 0xFF) << 56;
+    let options = (args.options as u64 & 0xF) << 52;
+    let rdest = (args.rdest as u64 & 0xF) << 48;
+    let arg1 = (args.arg1_raw as u64 & 0xFF_FFFF) << 24;
+    let arg2 = args.arg2_raw as u64 & 0xFF_FFFF;
+
+    op_code | options | rdest | arg1 | arg2
+}

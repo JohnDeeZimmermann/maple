@@ -29,3 +29,18 @@ pub fn resolve_required_register_argument_value(cpu: &mut MapleCPU, argument: u6
     let reg_num = extract_from_binary_right(argument, 4, 1) as u8;
     cpu.get_register(reg_num)
 }
+
+pub fn place_value_in_binary_from_right(value: u64, position: u8, slice_size: u8) -> u64 {
+
+    let position = 64 - position - slice_size;
+
+    if (position > 64) {
+        panic!("Position provided may not be smaller than 0.")
+    }
+
+    place_value_in_binary_from_left(value, position, slice_size)
+}
+
+pub fn place_value_in_binary_from_left(value: u64, position: u8, slice_size: u8) -> u64 {
+    (value & (2_u8.pow(slice_size as u32) as u64)) << position
+}

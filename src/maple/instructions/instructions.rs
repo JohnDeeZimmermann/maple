@@ -1,9 +1,10 @@
 use crate::maple::cpu::{ExecutionResult, MapleCPU, CPU};
-use crate::maple::instructions::integer_math_instructions::{execute_add_integer_instruction, execute_divide_integer_instruction, execute_multiply_integer_instruction, execute_subtract_integer_instruction};
+use crate::maple::instructions::conditional_skip_instruction::execute_conditional_skip_instruction;
+use crate::maple::instructions::integer_math_instructions::{execute_add_integer_instruction, execute_divide_integer_instruction, execute_multiply_integer_instruction, execute_subtract_integer_instruction, update_conditional_result_register};
 use crate::maple::instructions::move_instructions::execute_move_instruction;
 use crate::maple::interrupt_codes::INTERRUPT_CODE_INVALID_OPCODE;
 use crate::maple::memory::Memory;
-use crate::maple::utils::{extract_from_binary_left, extract_from_binary_right};
+use crate::maple::utils::{ConditionalResult, extract_from_binary_left, extract_from_binary_right};
 
 pub struct InstructionArguments {
     pub op_code: u8,
@@ -19,6 +20,7 @@ const OP_CODE_ADD_INTEGER: u8 = 2;
 const OP_CODE_SUBTRACT_INTEGER: u8 = 3;
 const OP_CODE_MULTIPLY_INTEGER: u8 = 4;
 const OP_CODE_DIVIDE_INTEGER: u8 = 5;
+const OP_CONDITIONAL_SKIP: u8 = 6;
 
 pub fn execute_instruction(
     cpu: &mut MapleCPU,
@@ -58,6 +60,9 @@ pub fn execute_instruction(
         OP_CODE_DIVIDE_INTEGER => {
             execute_divide_integer_instruction(cpu, &args);
         },
+        OP_CODE_CONDITIONAL_SKIP => {
+            execute_conditional_skip_instruction(cpu, &args);
+        },
         _ => {
             cpu.raise_interrupt(INTERRUPT_CODE_INVALID_OPCODE);
         }
@@ -75,3 +80,21 @@ pub fn create_basic_instruction(args: InstructionArguments) -> u64 {
 
     op_code | options | rdest | arg1 | arg2
 }
+
+pub fn perform_compare(cpu: &mut MapleCPU, a: i64, b: i64) {
+    let (result, overflowed) = a.overflowing_sub(b);
+    update_conditional_result_register(cpu, result, overflowed);
+}
+
+pub fn is_condition_option_met(options: u8, result: ConditionalResult) -> bool {
+    match (options) {
+        CONDITION_OPTION_EQ => result.zero,
+        CONDITION_OPTION_NEQ => !result.zero,
+        CONDITION_OPTION_GT => !result.zero && !result.negative,
+        CONDITION_OPTION_LT => !result.zero && result.negative,
+        CONDITION_OPTION_GTE => result.zero || !result.negative,
+        CONDITION_OPTION_GTE => result.zero || !result.negative,
+        _ => false
+    }
+}
+

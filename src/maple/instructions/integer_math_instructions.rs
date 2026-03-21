@@ -48,7 +48,7 @@ pub fn execute_divide_integer_instruction(cpu: &mut MapleCPU, args: &Instruction
     update_conditional_result_register(cpu, result, overflowed);
 }
 
-fn update_conditional_result_register(cpu: &mut MapleCPU, operation_result: i64, overflowed: bool) {
+pub fn update_conditional_result_register(cpu: &mut MapleCPU, operation_result: i64, overflowed: bool) {
     let overflow = overflowed as u64;
     let zero = ((operation_result == 0) as u64) << 1;
     let negative = extract_from_binary_left(operation_result as u64, 1, 0) << 2; // MSB bit

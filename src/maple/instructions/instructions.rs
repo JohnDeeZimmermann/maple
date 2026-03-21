@@ -3,6 +3,7 @@ use std::ops::Sub;
 use crate::maple::cpu::{ExecutionResult, MapleCPU, CPU};
 use crate::maple::instructions::compare_float_instruction::execute_compare_float_instruction;
 use crate::maple::instructions::compare_int_instruction::execute_compare_int_instruction;
+use crate::maple::instructions::compare_results_instruction::execute_compare_results_instruction;
 use crate::maple::instructions::conditional_skip_instruction::execute_conditional_skip_instruction;
 use crate::maple::instructions::float_math_instructions::{execute_add_float_instruction, execute_divide_float_instruction, execute_multiply_float_instruction, execute_subtract_float_instruction, update_conditional_result_register_float};
 use crate::maple::instructions::integer_math_instructions::{execute_add_integer_instruction, execute_divide_integer_instruction, execute_multiply_integer_instruction, execute_subtract_integer_instruction, update_conditional_result_register_int};
@@ -105,6 +106,9 @@ pub fn execute_instruction(
         OP_CODE_COMPARE_FLOAT => {
             execute_compare_float_instruction(cpu, &args);
         },
+        OP_CODE_COMPARE_RESULTS => {
+            execute_compare_results_instruction(cpu, &args);
+        }
         _ => {
             cpu.raise_interrupt(INTERRUPT_CODE_INVALID_OPCODE);
         }

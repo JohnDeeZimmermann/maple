@@ -7,9 +7,13 @@ pub const OP_CODE_ADD_INTEGER: u8 = 2;
 pub const OP_CODE_SUBTRACT_INTEGER: u8 = 3;
 pub const OP_CODE_MULTIPLY_INTEGER: u8 = 4;
 pub const OP_CODE_DIVIDE_INTEGER: u8 = 5;
-pub const OP_CODE_CONDITIONAL_SKIP: u8 = 6;
-pub const OP_CODE_COMPARE_INTEGER: u8 = 7;
-pub const OP_CODE_COMPARE_FLOAT: u8 = 8;
+pub const OP_CODE_ADD_FLOAT: u8 = 6;
+pub const OP_CODE_SUBTRACT_FLOAT: u8 = 7;
+pub const OP_CODE_MULTIPLY_FLOAT: u8 = 8;
+pub const OP_CODE_DIVIDE_FLOAT: u8 = 9;
+pub const OP_CODE_CONDITIONAL_SKIP: u8 = 10;
+pub const OP_CODE_COMPARE_INTEGER: u8 = 11;
+pub const OP_CODE_COMPARE_FLOAT: u8 = 12;
 
 pub fn new_cpu_and_memory() -> (MapleCPU, Memory) {
     // All instruction tests run in kernel mode with PC starting at 0.

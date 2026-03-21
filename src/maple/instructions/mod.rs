@@ -8,3 +8,4 @@ pub mod conditional_skip_instruction;
 pub mod condition_options;
 pub mod compare_int_instruction;
 pub mod compare_float_instruction;
+pub mod compare_results_instruction;

@@ -113,7 +113,7 @@ impl CPU for MapleCPU {
         // Next 16 bits represent the size of the interrupt table
         let interrupt_table_size = extract_from_binary_left(self.get_system_info(), 16, 16) as u16;
 
-        if (code > interrupt_table_size) {
+        if code > interrupt_table_size {
             self.raise_interrupt(INTERRUPT_CODE_INVALID_INTERRUPT_CODE);
             return;
         }

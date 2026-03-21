@@ -48,7 +48,7 @@ pub fn place_value_in_binary_from_right(value: u64, position: u8, slice_size: u8
 
     let position = 64 - position - slice_size;
 
-    if (position > 64) {
+    if position > 64 {
         panic!("Position provided may not be smaller than 0.")
     }
 

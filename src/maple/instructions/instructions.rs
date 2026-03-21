@@ -105,7 +105,7 @@ pub fn perform_float_compare(cpu: &mut MapleCPU, a: f64, b: f64) {
 }
 
 pub fn is_condition_option_met(options: u8, result: ConditionalResult) -> bool {
-    match (options) {
+    match options {
         CONDITION_OPTION_EQ => result.zero,
         CONDITION_OPTION_NEQ => !result.zero,
         CONDITION_OPTION_GT => !result.zero && !result.negative,

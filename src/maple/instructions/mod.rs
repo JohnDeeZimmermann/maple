@@ -6,3 +6,5 @@ pub mod integer_math_instructions;
 pub mod float_math_instructions;
 pub mod conditional_skip_instruction;
 pub mod condition_options;
+pub mod compare_int_instruction;
+pub mod compare_float_instruction;

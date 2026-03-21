@@ -1,6 +1,11 @@
+use std::ops::Sub;
+
 use crate::maple::cpu::{ExecutionResult, MapleCPU, CPU};
+use crate::maple::instructions::compare_float_instruction::execute_compare_float_instruction;
+use crate::maple::instructions::compare_int_instruction::execute_compare_int_instruction;
 use crate::maple::instructions::conditional_skip_instruction::execute_conditional_skip_instruction;
-use crate::maple::instructions::integer_math_instructions::{execute_add_integer_instruction, execute_divide_integer_instruction, execute_multiply_integer_instruction, execute_subtract_integer_instruction, update_conditional_result_register};
+use crate::maple::instructions::float_math_instructions::update_conditional_result_register_float;
+use crate::maple::instructions::integer_math_instructions::{execute_add_integer_instruction, execute_divide_integer_instruction, execute_multiply_integer_instruction, execute_subtract_integer_instruction, update_conditional_result_register_int};
 use crate::maple::instructions::move_instructions::execute_move_instruction;
 use crate::maple::interrupt_codes::INTERRUPT_CODE_INVALID_OPCODE;
 use crate::maple::memory::Memory;
@@ -20,7 +25,9 @@ const OP_CODE_ADD_INTEGER: u8 = 2;
 const OP_CODE_SUBTRACT_INTEGER: u8 = 3;
 const OP_CODE_MULTIPLY_INTEGER: u8 = 4;
 const OP_CODE_DIVIDE_INTEGER: u8 = 5;
-const OP_CONDITIONAL_SKIP: u8 = 6;
+const OP_CODE_CONDITIONAL_SKIP: u8 = 6;
+const OP_CODE_COMPARE_INTEGER: u8 = 7;
+const OP_CODE_COMPARE_FLOAT: u8 = 8;
 
 pub fn execute_instruction(
     cpu: &mut MapleCPU,
@@ -63,6 +70,12 @@ pub fn execute_instruction(
         OP_CODE_CONDITIONAL_SKIP => {
             execute_conditional_skip_instruction(cpu, &args);
         },
+        OP_CODE_COMPARE_INTEGER => {
+            execute_compare_int_instruction(cpu, &args);
+        },
+        OP_CODE_COMPARE_FLOAT => {
+            execute_compare_float_instruction(cpu, &args);
+        },
         _ => {
             cpu.raise_interrupt(INTERRUPT_CODE_INVALID_OPCODE);
         }
@@ -81,9 +94,14 @@ pub fn create_basic_instruction(args: InstructionArguments) -> u64 {
     op_code | options | rdest | arg1 | arg2
 }
 
-pub fn perform_compare(cpu: &mut MapleCPU, a: i64, b: i64) {
+pub fn perform_int_compare(cpu: &mut MapleCPU, a: i64, b: i64) {
     let (result, overflowed) = a.overflowing_sub(b);
-    update_conditional_result_register(cpu, result, overflowed);
+    update_conditional_result_register_int(cpu, result, overflowed);
+}
+
+pub fn perform_float_compare(cpu: &mut MapleCPU, a: f64, b: f64) {
+    let result = a - b;
+    update_conditional_result_register_float(cpu, result, false);
 }
 
 pub fn is_condition_option_met(options: u8, result: ConditionalResult) -> bool {
@@ -97,4 +115,3 @@ pub fn is_condition_option_met(options: u8, result: ConditionalResult) -> bool {
         _ => false
     }
 }
-

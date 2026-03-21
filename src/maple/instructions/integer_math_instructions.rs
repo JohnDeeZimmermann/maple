@@ -10,7 +10,7 @@ pub fn execute_add_integer_instruction(cpu: &mut MapleCPU, args: &InstructionArg
     let (result, overflowed) = value_a.overflowing_add(value_b);
 
     cpu.set_register(args.rdest, result as u64);
-    update_conditional_result_register(cpu, result, overflowed);
+    update_conditional_result_register_int(cpu, result, overflowed);
 }
 
 pub fn execute_subtract_integer_instruction(cpu: &mut MapleCPU, args: &InstructionArguments) {
@@ -20,7 +20,7 @@ pub fn execute_subtract_integer_instruction(cpu: &mut MapleCPU, args: &Instructi
     let (result, overflowed) = value_a.overflowing_sub(value_b);
 
     cpu.set_register(args.rdest, result as u64);
-    update_conditional_result_register(cpu, result, overflowed);
+    update_conditional_result_register_int(cpu, result, overflowed);
 }
 
 pub fn execute_multiply_integer_instruction(cpu: &mut MapleCPU, args: &InstructionArguments) {
@@ -30,7 +30,7 @@ pub fn execute_multiply_integer_instruction(cpu: &mut MapleCPU, args: &Instructi
     let (result, overflowed) = value_a.overflowing_mul(value_b);
 
     cpu.set_register(args.rdest, result as u64);
-    update_conditional_result_register(cpu, result, overflowed);
+    update_conditional_result_register_int(cpu, result, overflowed);
 }
 
 pub fn execute_divide_integer_instruction(cpu: &mut MapleCPU, args: &InstructionArguments) {
@@ -45,10 +45,10 @@ pub fn execute_divide_integer_instruction(cpu: &mut MapleCPU, args: &Instruction
     let (result, overflowed) = value_a.overflowing_div(value_b);
 
     cpu.set_register(args.rdest, result as u64);
-    update_conditional_result_register(cpu, result, overflowed);
+    update_conditional_result_register_int(cpu, result, overflowed);
 }
 
-pub fn update_conditional_result_register(cpu: &mut MapleCPU, operation_result: i64, overflowed: bool) {
+pub fn update_conditional_result_register_int(cpu: &mut MapleCPU, operation_result: i64, overflowed: bool) {
     let overflow = overflowed as u64;
     let zero = ((operation_result == 0) as u64) << 1;
     let negative = extract_from_binary_left(operation_result as u64, 1, 0) << 2; // MSB bit
@@ -58,3 +58,4 @@ pub fn update_conditional_result_register(cpu: &mut MapleCPU, operation_result: 
     let updated = (current_register & 0xFFFFFFFFFFFFFFF0) | parity | negative | zero | overflow;
     cpu.set_result_register(updated);
 }
+

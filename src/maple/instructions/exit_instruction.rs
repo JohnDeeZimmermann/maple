@@ -1,5 +1,4 @@
-pub fn execute(
-    _cpu: &mut crate::maple::cpu::MapleCPU,
-    _args: &crate::maple::instructions::instructions::InstructionArguments,
-) {
-}
+use crate::maple::cpu::MapleCPU;
+use crate::maple::instructions::instructions::InstructionArguments;
+
+pub fn execute(cpu: &mut MapleCPU, args: &InstructionArguments) {}

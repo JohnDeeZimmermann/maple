@@ -48,15 +48,10 @@ In case of an interrupt, the program counter is set to the address specified + t
 The next 16 bits of the `sy` register contain the length of the interrupt table (`interrupt_table_length`). 
 If an interrupt is raised with a code larger than `interrupt_table_length`, an interrupt is raised. 
 
-The last bit stores the current CPU mode, where `0` refers to *user mode* and `1` refers to *kernel mode*.
+When an interrupt is raised, the current program counter (physical) is set to the last 32 bits.
+
+```
+INTERRUPT_TABLE_BASE(16) | INTERRUPT_TABLE_LENGTH (16) | OLD_PC (32)
+```
 
 This register can only be modified when in kernel mode.
-
-## Table Base Register
-The table base register points to the beginning of several tables.
-
-```
-INTERRUPT_INFO_TABLE_BASE(16) | PAGE_TABLE_BASE (16) | RESERVED(32)
-```
-
-When interrupts occur, the CPU writes registers 0 to 10 and 13 in order, into the table. 

@@ -1,6 +1,5 @@
 use crate::maple::cpu::MapleCPU;
 use crate::maple::interrupt_codes::INTERRUPT_CODE_ILLEGAL_DIRECT_ARGUMENT;
-use std::path::Component::ParentDir;
 
 pub struct ConditionalResult {
     pub parity: bool,
@@ -55,7 +54,7 @@ pub fn place_value_in_binary_from_right(value: u64, position: u8, slice_size: u8
 }
 
 pub fn place_value_in_binary_from_left(value: u64, position: u8, slice_size: u8) -> u64 {
-    (value & (2_u8.pow(slice_size as u32) as u64)) << position
+    (value & 2_u64.pow(slice_size as u32)) << position
 }
 
 pub fn get_conditional_result(cpu: &MapleCPU) -> ConditionalResult {

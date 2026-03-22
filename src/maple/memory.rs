@@ -30,7 +30,7 @@ impl Memory {
     }
 
     pub fn virtual_to_physical(&self, address: u32, cpu: &mut MapleCPU) -> u32 {
-        let table_base = cpu.get_page_table_base();
+        let table_base = cpu.get_page_table_base() as u32;
         let page_offset = address & 0xFFF; // The last twelve bits
         let page_table_index = (address >> 12) & 0x3FF; // The next ten bits
         let page_directory_index = (address >> 22) & 0x3FF; // The next ten bits

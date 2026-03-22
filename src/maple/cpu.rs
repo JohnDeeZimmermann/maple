@@ -3,7 +3,7 @@ use crate::maple::interrupt_codes::{
     INTERRUPT_CODE_ILLEGAL_REGISTER_MODIFICATION, INTERRUPT_CODE_INVALID_INTERRUPT_CODE,
 };
 use crate::maple::memory::Memory;
-use crate::maple::utils::extract_from_binary_left;
+use crate::maple::utils::{extract_from_binary_left, place_value_in_binary_from_right};
 use std::cmp::PartialEq;
 
 #[derive(PartialEq)]
@@ -74,6 +74,10 @@ impl MapleCPU {
 
         let result = interrupt_table_base + code;
 
+        self.mode = ExecutionMode::Kernel;
+
+        // OLD_PC
+        place_value_in_binary_from_right(self.get_program_counter(), 0, 32);
         self.set_program_counter(result as u64);
     }
 
@@ -121,12 +125,8 @@ impl MapleCPU {
         self.set_register(REGISTER_IO_POINTER, value);
     }
 
-    pub fn get_table_base(&self) -> u64 {
+    pub fn get_page_table_base(&self) -> u64 {
         self.get_register(REGISTER_TABLE_BASE)
-    }
-
-    pub fn get_page_table_base(&self) -> u32 {
-        extract_from_binary_left(self.get_table_base(), 16, 32) as u32
     }
 
     pub fn set_table_base(&mut self, value: u64) {

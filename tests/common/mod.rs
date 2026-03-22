@@ -17,6 +17,7 @@ pub const OP_CODE_COMPARE_FLOAT: u8 = 12;
 pub const OP_CODE_COMPARE_RESULTS: u8 = 13;
 pub const OP_CODE_CONDITIONAL_BRANCH: u8 = 14;
 pub const OP_CODE_BRANCH: u8 = 15;
+pub const OP_CODE_BRANCH_LINK: u8 = 16;
 
 pub fn new_cpu_and_memory() -> (MapleCPU, Memory) {
     // All instruction tests run in kernel mode with PC starting at 0.

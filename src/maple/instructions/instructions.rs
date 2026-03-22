@@ -205,12 +205,16 @@ pub fn is_condition_option_met(options: u8, result: ConditionalResult) -> bool {
     }
 }
 
-pub fn safely_update_program_counter(cpu: &mut MapleCPU, memory: &mut Memory, destination: u32) {
+pub fn safely_update_program_counter(
+    cpu: &mut MapleCPU,
+    memory: &mut Memory,
+    destination: u32,
+) -> bool {
     let actual_dest = if cpu.mode == ExecutionMode::User {
         let resolved =
             memory.virtual_to_physical(destination, cpu.get_page_table_base() as u32, cpu);
         if resolved == 0 {
-            return;
+            return false;
         }
         resolved
     } else {
@@ -218,4 +222,5 @@ pub fn safely_update_program_counter(cpu: &mut MapleCPU, memory: &mut Memory, de
     };
 
     cpu.set_program_counter(actual_dest as u64);
+    true
 }

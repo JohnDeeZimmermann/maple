@@ -1,11 +1,14 @@
 use std::ops::Sub;
 
 use crate::maple::cpu::{ExecutionMode, ExecutionResult, MapleCPU, CPU};
+use crate::maple::instructions::branch_instruction::execute as execute_branch_instruction;
+use crate::maple::instructions::branch_link_instruction::execute as execute_branch_link_instruction;
 use crate::maple::instructions::compare_float_instruction::execute_compare_float_instruction;
 use crate::maple::instructions::compare_int_instruction::execute_compare_int_instruction;
 use crate::maple::instructions::compare_results_instruction::execute_compare_results_instruction;
 use crate::maple::instructions::conditional_branch_instruction::execute_conditional_branch_instruction;
 use crate::maple::instructions::conditional_skip_instruction::execute_conditional_skip_instruction;
+use crate::maple::instructions::exit_instruction::execute as execute_exit_instruction;
 use crate::maple::instructions::float_math_instructions::{
     execute_add_float_instruction, execute_divide_float_instruction,
     execute_multiply_float_instruction, execute_subtract_float_instruction,
@@ -16,7 +19,15 @@ use crate::maple::instructions::integer_math_instructions::{
     execute_multiply_integer_instruction, execute_subtract_integer_instruction,
     update_conditional_result_register_int,
 };
+use crate::maple::instructions::io_read_write_instruction::execute as execute_io_read_write_instruction;
+use crate::maple::instructions::load_register_instruction::execute as execute_load_register_instruction;
+use crate::maple::instructions::logical_operations_instruction::execute as execute_logical_operations_instruction;
+use crate::maple::instructions::logical_shift_instruction::execute as execute_logical_shift_instruction;
 use crate::maple::instructions::move_instructions::execute_move_instruction;
+use crate::maple::instructions::pop_push_instruction::execute as execute_pop_push_instruction;
+use crate::maple::instructions::return_from_interrupt_instruction::execute as execute_return_from_interrupt_instruction;
+use crate::maple::instructions::software_interrupt_instruction::execute as execute_software_interrupt_instruction;
+use crate::maple::instructions::store_memory_instruction::execute as execute_store_memory_instruction;
 use crate::maple::interrupt_codes::INTERRUPT_CODE_INVALID_OPCODE;
 use crate::maple::memory::Memory;
 use crate::maple::utils::{extract_from_binary_left, extract_from_binary_right, ConditionalResult};
@@ -120,6 +131,39 @@ pub fn execute_instruction(
         }
         OP_CODE_CONDITIONAL_BRANCH => {
             execute_conditional_branch_instruction(cpu, memory, &args);
+        }
+        OP_CODE_BRANCH => {
+            execute_branch_instruction(cpu, memory, &args);
+        }
+        OP_CODE_BRANCH_LINK => {
+            execute_branch_link_instruction(cpu, memory, &args);
+        }
+        OP_CODE_LOGICAL_SHIFT => {
+            execute_logical_shift_instruction(cpu, &args);
+        }
+        OP_CODE_LOGICAL_OPERATIONS => {
+            execute_logical_operations_instruction(cpu, &args);
+        }
+        OP_CODE_LOAD_REGISTER => {
+            execute_load_register_instruction(cpu, memory, &args);
+        }
+        OP_CODE_STORE_MEMORY => {
+            execute_store_memory_instruction(cpu, memory, &args);
+        }
+        OP_CODE_POP_PUSH => {
+            execute_pop_push_instruction(cpu, memory, &args);
+        }
+        OP_CODE_EXIT => {
+            execute_exit_instruction(cpu, &args);
+        }
+        OP_CODE_IO_READ_WRITE => {
+            execute_io_read_write_instruction(cpu, memory, &args);
+        }
+        OP_CODE_SOFTWARE_INTERRUPT => {
+            execute_software_interrupt_instruction(cpu, &args);
+        }
+        OP_CODE_RETURN_FROM_INTERRUPT => {
+            execute_return_from_interrupt_instruction(cpu, &args);
         }
         _ => {
             cpu.raise_interrupt(INTERRUPT_CODE_INVALID_OPCODE);

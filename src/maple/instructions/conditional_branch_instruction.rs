@@ -1,4 +1,4 @@
-use crate::maple::cpu::{ExecutionMode, MapleCPU, CPU};
+use crate::maple::cpu::{MapleCPU, CPU};
 use crate::maple::instructions::instructions::{is_condition_option_met, safely_update_program_counter, InstructionArguments};
 use crate::maple::memory::Memory;
 use crate::maple::utils::{get_conditional_result, resolve_potential_register_argument_value};

@@ -1,5 +1,4 @@
 use crate::maple::cpu::{MapleCPU, CPU};
-use crate::maple::memory::Memory;
 use crate::maple::utils::{extract_from_binary_left, extract_from_binary_right, resolve_potential_register_argument_value};
 
 pub fn execute_move_instruction(cpu: &mut MapleCPU, instruction: u64) {

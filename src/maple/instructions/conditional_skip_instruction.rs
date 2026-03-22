@@ -1,5 +1,4 @@
 use crate::maple::cpu::{CPU, MapleCPU};
-use crate::maple::instructions::condition_options::{CONDITION_OPTION_EQ, CONDITION_OPTION_GT, CONDITION_OPTION_GTE, CONDITION_OPTION_LT, CONDITION_OPTION_NEQ};
 use crate::maple::instructions::instructions::{InstructionArguments, is_condition_option_met, perform_int_compare};
 use crate::maple::utils::{get_conditional_result, resolve_potential_register_argument_value};
 

@@ -1,4 +1,4 @@
-use maple::maple::cpu::{ExecutionMode, ExecutionResult, MapleCPU, CPU};
+use maple::maple::cpu::{ExecutionMode, ExecutionResult, MapleCPU};
 use maple::maple::instructions::instructions::{create_basic_instruction, InstructionArguments};
 use maple::maple::memory::Memory;
 

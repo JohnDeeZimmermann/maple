@@ -1,5 +1,5 @@
-use crate::maple::cpu::{ExecutionMode, ExecutionResult, MapleCPU, CPU};
-use crate::maple::interrupt_codes::{INTERRUPT_CODE_ILLEGAL_EXIT};
+use crate::maple::cpu::{ExecutionMode, ExecutionResult, MapleCPU};
+use crate::maple::interrupt_codes::INTERRUPT_CODE_ILLEGAL_EXIT;
 
 pub fn execute_exit_instruction(cpu: &mut MapleCPU) -> ExecutionResult {
     if cpu.mode == ExecutionMode::User {

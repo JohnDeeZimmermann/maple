@@ -5,7 +5,7 @@ use common::{
     execute_single_instruction, new_cpu_and_memory, OP_CODE_COMPARE_INTEGER,
     OP_CODE_CONDITIONAL_BRANCH,
 };
-use maple::maple::cpu::CPU;
+
 use maple::maple::instructions::condition_options::{
     CONDITION_OPTION_EQ, CONDITION_OPTION_GT, CONDITION_OPTION_GTE, CONDITION_OPTION_LT,
     CONDITION_OPTION_LTE, CONDITION_OPTION_NEQ,

@@ -1,7 +1,6 @@
 mod common;
 
 use common::{encode_move_instruction, execute_single_instruction, new_cpu_and_memory};
-use maple::maple::cpu::CPU;
 
 #[test]
 fn mov_direct_value_writes_destination_register() {

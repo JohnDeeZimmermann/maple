@@ -1,11 +1,11 @@
 mod common;
 
 use common::{
-    configure_interrupt_table, cr_negative, cr_overflow, cr_parity, cr_zero, encode_basic_instruction,
-    encode_direct_argument, encode_register_argument, execute_single_instruction, new_cpu_and_memory,
-    OP_CODE_ADD_INTEGER, OP_CODE_DIVIDE_INTEGER, OP_CODE_MULTIPLY_INTEGER, OP_CODE_SUBTRACT_INTEGER,
+    configure_interrupt_table, cr_negative, cr_overflow, cr_parity, cr_zero,
+    encode_basic_instruction, encode_direct_argument, encode_register_argument,
+    execute_single_instruction, new_cpu_and_memory, OP_CODE_ADD_INTEGER, OP_CODE_DIVIDE_INTEGER,
+    OP_CODE_MULTIPLY_INTEGER, OP_CODE_SUBTRACT_INTEGER,
 };
-use maple::maple::cpu::CPU;
 
 #[test]
 fn addi_direct_operands_produces_expected_result() {

@@ -1,4 +1,4 @@
-use crate::maple::cpu::{MapleCPU, CPU};
+use crate::maple::cpu::MapleCPU;
 use crate::maple::instructions::instructions::InstructionArguments;
 use crate::maple::utils::resolve_potential_register_argument_value;
 

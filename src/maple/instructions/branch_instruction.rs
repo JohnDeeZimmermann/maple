@@ -1,4 +1,4 @@
-use crate::maple::cpu::{MapleCPU, CPU};
+use crate::maple::cpu::MapleCPU;
 use crate::maple::instructions::instructions::{
     safely_update_program_counter, InstructionArguments,
 };

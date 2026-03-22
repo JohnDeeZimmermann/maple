@@ -1,6 +1,5 @@
-use crate::maple::utils::extract_from_binary_left;
 use crate::maple::{
-    cpu::{ExecutionMode, MapleCPU, CPU},
+    cpu::{ExecutionMode, MapleCPU},
     interrupt_codes::INTERRUPT_CODE_PAGE_FAULT,
 };
 

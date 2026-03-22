@@ -1,4 +1,4 @@
-use crate::maple::cpu::{ExecutionMode, ExecutionResult, MapleCPU, CPU};
+use crate::maple::cpu::{ExecutionMode, ExecutionResult, MapleCPU};
 use crate::maple::instructions::branch_instruction::execute_branch_instruction;
 use crate::maple::instructions::branch_link_instruction::execute_branch_link_instruction;
 use crate::maple::instructions::compare_float_instruction::execute_compare_float_instruction;

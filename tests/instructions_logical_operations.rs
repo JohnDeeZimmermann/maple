@@ -4,7 +4,6 @@ use common::{
     encode_basic_instruction, encode_direct_argument, encode_register_argument,
     execute_single_instruction, new_cpu_and_memory, OP_CODE_LOGICAL_OPERATIONS,
 };
-use maple::maple::cpu::CPU;
 
 fn and_instruction(rdest: u8, arg1_raw: u32, arg2_raw: u32) -> u64 {
     encode_basic_instruction(OP_CODE_LOGICAL_OPERATIONS, rdest, arg1_raw, arg2_raw)

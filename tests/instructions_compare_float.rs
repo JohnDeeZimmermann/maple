@@ -4,7 +4,6 @@ use common::{
     cr_negative, cr_zero, encode_basic_instruction, encode_register_argument,
     execute_single_instruction, new_cpu_and_memory, OP_CODE_COMPARE_FLOAT,
 };
-use maple::maple::cpu::CPU;
 
 #[test]
 fn compare_float_equal_values_sets_zero_flag() {

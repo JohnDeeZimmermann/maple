@@ -4,7 +4,7 @@ use common::{
     cr_negative, cr_zero, encode_direct_argument, encode_register_argument,
     execute_single_instruction, new_cpu_and_memory, OP_CODE_CONDITIONAL_SKIP,
 };
-use maple::maple::cpu::CPU;
+
 use maple::maple::instructions::condition_options::CONDITION_OPTION_EQ;
 use maple::maple::instructions::instructions::{create_basic_instruction, InstructionArguments};
 

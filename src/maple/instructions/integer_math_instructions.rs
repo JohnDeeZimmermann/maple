@@ -1,4 +1,4 @@
-use crate::maple::cpu::{MapleCPU, CPU};
+use crate::maple::cpu::MapleCPU;
 use crate::maple::instructions::instructions::InstructionArguments;
 use crate::maple::interrupt_codes::INTERRUPT_CODE_INVALID_DIVISION_BY_ZERO;
 use crate::maple::utils::{extract_from_binary_left, resolve_potential_register_argument_value};
@@ -48,7 +48,11 @@ pub fn execute_divide_integer_instruction(cpu: &mut MapleCPU, args: &Instruction
     update_conditional_result_register_int(cpu, result, overflowed);
 }
 
-pub fn update_conditional_result_register_int(cpu: &mut MapleCPU, operation_result: i64, overflowed: bool) {
+pub fn update_conditional_result_register_int(
+    cpu: &mut MapleCPU,
+    operation_result: i64,
+    overflowed: bool,
+) {
     let overflow = overflowed as u64;
     let zero = ((operation_result == 0) as u64) << 1;
     let negative = extract_from_binary_left(operation_result as u64, 1, 0) << 2; // MSB bit
@@ -58,4 +62,3 @@ pub fn update_conditional_result_register_int(cpu: &mut MapleCPU, operation_resu
     let updated = (current_register & 0xFFFFFFFFFFFFFFF0) | parity | negative | zero | overflow;
     cpu.set_result_register(updated);
 }
-

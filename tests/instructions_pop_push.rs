@@ -1,7 +1,6 @@
 mod common;
 
 use common::{execute_single_instruction, new_cpu_and_memory, OP_CODE_POP_PUSH};
-use maple::maple::cpu::CPU;
 
 fn pop_instruction(rdest: u8) -> u64 {
     create_pop_push_instruction(0, rdest)

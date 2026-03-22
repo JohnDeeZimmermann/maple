@@ -1,4 +1,4 @@
-use crate::maple::cpu::{MapleCPU, CPU};
+use crate::maple::cpu::MapleCPU;
 use crate::maple::instructions::instructions::{is_condition_option_met, InstructionArguments};
 use crate::maple::utils::get_conditional_result;
 

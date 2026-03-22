@@ -1,4 +1,4 @@
-use crate::maple::cpu::{MapleCPU, CPU};
+use crate::maple::cpu::MapleCPU;
 use crate::maple::instructions::instructions::InstructionArguments;
 use crate::maple::interrupt_codes::INTERRUPT_CODE_INVALID_DIVISION_BY_ZERO;
 use crate::maple::utils::{extract_from_binary_left, resolve_required_register_argument_value};

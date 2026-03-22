@@ -4,7 +4,7 @@ use common::{
     encode_direct_argument, encode_register_argument, execute_single_instruction,
     new_cpu_and_memory, OP_CODE_BRANCH_LINK,
 };
-use maple::maple::cpu::CPU;
+
 use maple::maple::instructions::instructions::{create_basic_instruction, InstructionArguments};
 
 fn branch_link_instruction(rdest: u8, arg1_raw: u32) -> u64 {

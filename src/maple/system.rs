@@ -1,10 +1,9 @@
-use crate::maple::cpu::{MapleCPU, CPU};
+use crate::maple::cpu::MapleCPU;
 use crate::maple::memory::Memory;
 
 struct VirtualMachine {
     cpu: MapleCPU,
-    memory: Memory
+    memory: Memory,
 }
 
-impl VirtualMachine {
-}
+impl VirtualMachine {}

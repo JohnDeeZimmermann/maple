@@ -3,7 +3,7 @@ mod common;
 use common::{
     encode_basic_instruction, execute_single_instruction, new_cpu_and_memory, OP_CODE_EXIT,
 };
-use maple::maple::cpu::{ExecutionMode, ExecutionResult, CPU};
+use maple::maple::cpu::{ExecutionMode, ExecutionResult};
 
 fn exit_instruction() -> u64 {
     encode_basic_instruction(OP_CODE_EXIT, 0, 0, 0)

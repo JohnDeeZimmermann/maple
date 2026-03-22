@@ -1,6 +1,6 @@
-use std::path::Component::ParentDir;
-use crate::maple::cpu::{MapleCPU, CPU};
+use crate::maple::cpu::MapleCPU;
 use crate::maple::interrupt_codes::INTERRUPT_CODE_ILLEGAL_DIRECT_ARGUMENT;
+use std::path::Component::ParentDir;
 
 pub struct ConditionalResult {
     pub parity: bool,
@@ -38,14 +38,13 @@ pub fn resolve_required_register_argument_value(cpu: &mut MapleCPU, argument: u6
     let is_register = (argument & 1) == 1;
     if !is_register {
         cpu.raise_interrupt(INTERRUPT_CODE_ILLEGAL_DIRECT_ARGUMENT);
-        return 0
+        return 0;
     }
     let reg_num = extract_from_binary_right(argument, 4, 1) as u8;
     cpu.get_register(reg_num)
 }
 
 pub fn place_value_in_binary_from_right(value: u64, position: u8, slice_size: u8) -> u64 {
-
     let position = 64 - position - slice_size;
 
     if position > 64 {
@@ -61,11 +60,11 @@ pub fn place_value_in_binary_from_left(value: u64, position: u8, slice_size: u8)
 
 pub fn get_conditional_result(cpu: &MapleCPU) -> ConditionalResult {
     let register = cpu.get_result_register();
-    
-    return ConditionalResult { 
+
+    return ConditionalResult {
         parity: (register >> 3) & 1 == 1,
         negative: (register >> 2) & 1 == 1,
         zero: (register >> 1) & 1 == 1,
-        overflow: register & 1 == 1
-    }
+        overflow: register & 1 == 1,
+    };
 }

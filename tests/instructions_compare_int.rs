@@ -5,7 +5,6 @@ use common::{
     encode_register_argument, execute_single_instruction, new_cpu_and_memory,
     OP_CODE_COMPARE_INTEGER,
 };
-use maple::maple::cpu::CPU;
 
 #[test]
 fn compare_int_direct_operands_equal_sets_zero_flag() {

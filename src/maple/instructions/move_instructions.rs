@@ -1,5 +1,7 @@
-use crate::maple::cpu::{MapleCPU, CPU};
-use crate::maple::utils::{extract_from_binary_left, extract_from_binary_right, resolve_potential_register_argument_value};
+use crate::maple::cpu::MapleCPU;
+use crate::maple::utils::{
+    extract_from_binary_left, extract_from_binary_right, resolve_potential_register_argument_value,
+};
 
 pub fn execute_move_instruction(cpu: &mut MapleCPU, instruction: u64) {
     let opt: u64 = extract_from_binary_left(instruction, 1, 8);

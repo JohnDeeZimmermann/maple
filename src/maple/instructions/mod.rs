@@ -9,3 +9,4 @@ pub mod condition_options;
 pub mod compare_int_instruction;
 pub mod compare_float_instruction;
 pub mod compare_results_instruction;
+pub mod conditional_branch_instruction;

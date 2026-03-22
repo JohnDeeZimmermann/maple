@@ -15,6 +15,7 @@ pub const OP_CODE_CONDITIONAL_SKIP: u8 = 10;
 pub const OP_CODE_COMPARE_INTEGER: u8 = 11;
 pub const OP_CODE_COMPARE_FLOAT: u8 = 12;
 pub const OP_CODE_COMPARE_RESULTS: u8 = 13;
+pub const OP_CODE_CONDITIONAL_BRANCH: u8 = 14;
 
 pub fn new_cpu_and_memory() -> (MapleCPU, Memory) {
     // All instruction tests run in kernel mode with PC starting at 0.

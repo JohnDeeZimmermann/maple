@@ -1,3 +1,5 @@
 /target
 .zed
 .DS_Storage
+.DS_Store
+.idea/

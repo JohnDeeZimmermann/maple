@@ -1,9 +1,10 @@
 use std::ops::Sub;
 
-use crate::maple::cpu::{ExecutionResult, MapleCPU, CPU};
+use crate::maple::cpu::{ExecutionMode, ExecutionResult, MapleCPU, CPU};
 use crate::maple::instructions::compare_float_instruction::execute_compare_float_instruction;
 use crate::maple::instructions::compare_int_instruction::execute_compare_int_instruction;
 use crate::maple::instructions::compare_results_instruction::execute_compare_results_instruction;
+use crate::maple::instructions::conditional_branch_instruction::execute_conditional_branch_instruction;
 use crate::maple::instructions::conditional_skip_instruction::execute_conditional_skip_instruction;
 use crate::maple::instructions::float_math_instructions::{
     execute_add_float_instruction, execute_divide_float_instruction,
@@ -117,6 +118,9 @@ pub fn execute_instruction(
         OP_CODE_COMPARE_RESULTS => {
             execute_compare_results_instruction(cpu, &args);
         }
+        OP_CODE_CONDITIONAL_BRANCH => {
+            execute_conditional_branch_instruction(cpu, memory, &args);
+        }
         _ => {
             cpu.raise_interrupt(INTERRUPT_CODE_INVALID_OPCODE);
         }
@@ -130,8 +134,8 @@ pub fn create_basic_instruction(args: InstructionArguments) -> u64 {
     let options = (args.options as u64 & 0xF) << 52;
     let rdest = (args.rdest as u64 & 0xF) << 48;
     let arg1 = (args.arg1_raw as u64 & 0xFF_FFFF) << 24;
-    let arg2 = args.arg2_raw as u64 & 0xFF_FFFF;
 
+    let arg2 = args.arg2_raw as u64 & 0xFF_FFFF;
     op_code | options | rdest | arg1 | arg2
 }
 
@@ -155,4 +159,19 @@ pub fn is_condition_option_met(options: u8, result: ConditionalResult) -> bool {
         5 => result.zero || result.negative,
         _ => false,
     }
+}
+
+pub fn safely_update_program_counter(cpu: &mut MapleCPU, memory: &mut Memory, destination: u32) {
+    let actual_dest = if cpu.mode == ExecutionMode::User {
+        let resolved =
+            memory.virtual_to_physical(destination, cpu.get_page_table_base() as u32, cpu);
+        if resolved == 0 {
+            return;
+        }
+        resolved
+    } else {
+        destination
+    };
+
+    cpu.set_program_counter(actual_dest as u64);
 }

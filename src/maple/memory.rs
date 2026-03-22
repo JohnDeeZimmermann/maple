@@ -27,7 +27,7 @@ impl Memory {
         self.memory[memory_address as usize] = value;
     }
 
-    fn virtual_to_physical(&self, address: u32, page_table_base: u32, cpu: &mut MapleCPU) -> u32 {
+    pub fn virtual_to_physical(&self, address: u32, page_table_base: u32, cpu: &mut MapleCPU) -> u32 {
         let page_offset = address & 0xFFF; // The last twelve bits
         let page_table_index = (address >> 12) & 0x3FF; // The next ten bits
         let page_directory_index = (address >> 22) & 0x3FF; // The next ten bits
@@ -52,7 +52,7 @@ impl Memory {
         }
 
         // Page address = page offset = Physical address
-        return page_address + page_offset;
+        page_address + page_offset
     }
 
     pub fn read(&self, address: u32, cpu: &mut MapleCPU) -> u64 {

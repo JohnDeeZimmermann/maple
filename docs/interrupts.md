@@ -16,4 +16,4 @@ When an interrupt is raised, the program counter `pc` is set to the value found 
 | `0004` | Page Fault                    | Raised when processes try to access unreserved memory addresses.                      | 
 | `0005` | Illegal Register Modification | Raised when a restricted register is modified in user mode.                           | 
 | `0006` | Illegal Direct Argument       | Raised when a direct value is passed where only a reference to a register is allowed. | 
-
+| `0007` | Illegal Exit       | Raised when an exit was performed in user mode. |

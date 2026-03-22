@@ -22,6 +22,8 @@ pub const OP_CODE_LOGICAL_SHIFT: u8 = 17;
 pub const OP_CODE_LOGICAL_OPERATIONS: u8 = 18;
 pub const OP_CODE_LOAD_REGISTER: u8 = 19;
 pub const OP_CODE_STORE_MEMORY: u8 = 20;
+pub const OP_CODE_POP_PUSH: u8 = 21;
+pub const OP_CODE_EXIT: u8 = 22;
 
 pub fn new_cpu_and_memory() -> (MapleCPU, Memory) {
     // All instruction tests run in kernel mode with PC starting at 0.

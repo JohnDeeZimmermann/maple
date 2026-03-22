@@ -154,7 +154,7 @@ pub fn execute_instruction(
             execute_pop_push_instruction(cpu, memory, &args);
         }
         OP_CODE_EXIT => {
-            execute_exit_instruction(cpu, &args);
+            return execute_exit_instruction(cpu);
         }
         OP_CODE_IO_READ_WRITE => {
             execute_io_read_write_instruction(cpu, memory, &args);

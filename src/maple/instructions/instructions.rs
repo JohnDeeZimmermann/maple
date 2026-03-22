@@ -1,5 +1,3 @@
-use std::ops::Sub;
-
 use crate::maple::cpu::{ExecutionMode, ExecutionResult, MapleCPU, CPU};
 use crate::maple::instructions::branch_instruction::execute_branch_instruction;
 use crate::maple::instructions::branch_link_instruction::execute_branch_link_instruction;
@@ -211,8 +209,7 @@ pub fn safely_update_program_counter(
     destination: u32,
 ) -> bool {
     let actual_dest = if cpu.mode == ExecutionMode::User {
-        let resolved =
-            memory.virtual_to_physical(destination, cpu.get_page_table_base() as u32, cpu);
+        let resolved = memory.virtual_to_physical(destination, cpu);
         if resolved == 0 {
             return false;
         }

@@ -42,8 +42,10 @@ pub trait CPU {
     fn get_io_pointer(&self) -> u64;
     fn set_io_pointer(&mut self, value: u64);
 
-    fn get_page_table_base(&self) -> u64;
-    fn set_page_table_base(&mut self, value: u64);
+    fn get_table_base(&self) -> u64;
+    fn set_table_base(&mut self, value: u64);
+    
+    fn get_page_table_base(&self) -> u32;
 
     fn get_system_info(&self) -> u64;
     fn set_system_info(&mut self, value: u64);
@@ -66,7 +68,7 @@ const REGISTER_PROGRAM_COUNTER: u8 = 7;
 const REGISTER_DYNAMIC_LINK: u8 = 8;
 const REGISTER_RESULT: u8 = 9;
 const REGISTER_IO_POINTER: u8 = 10;
-const REGISTER_PAGE_TABLE_BASE: u8 = 11;
+const REGISTER_TABLE_BASE: u8 = 11;
 const REGISTER_SYSTEM_INFO: u8 = 12;
 const REGISTER_FRAME_POINTER: u8 = 13;
 
@@ -167,12 +169,16 @@ impl CPU for MapleCPU {
         self.set_register(REGISTER_IO_POINTER, value);
     }
 
-    fn get_page_table_base(&self) -> u64 {
-        self.get_register(REGISTER_PAGE_TABLE_BASE)
+    fn get_table_base(&self) -> u64 {
+        self.get_register(REGISTER_TABLE_BASE)
+    }
+    
+    fn get_page_table_base(&self) -> u32 {
+        return extract_from_binary_left(self.get_table_base(), 16, 32) as u32;
     }
 
-    fn set_page_table_base(&mut self, value: u64) {
-        self.set_register(REGISTER_PAGE_TABLE_BASE, value);
+    fn set_table_base(&mut self, value: u64) {
+        self.set_register(REGISTER_TABLE_BASE, value);
     }
 
     fn get_system_info(&self) -> u64 {

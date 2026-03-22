@@ -51,3 +51,12 @@ If an interrupt is raised with a code larger than `interrupt_table_length`, an i
 The last bit stores the current CPU mode, where `0` refers to *user mode* and `1` refers to *kernel mode*.
 
 This register can only be modified when in kernel mode.
+
+## Table Base Register
+The table base register points to the beginning of several tables.
+
+```
+INTERRUPT_INFO_TABLE_BASE(16) | PAGE_TABLE_BASE (16) | RESERVED(32)
+```
+
+When interrupts occur, the CPU writes registers 0 to 10 and 13 in order, into the table. 

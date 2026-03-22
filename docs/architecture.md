@@ -30,7 +30,7 @@ We have several general-purpose registers `r0` to `r5`. These can be used for an
 | `iop`        | IOPointer: Points to an IO device to communicate with                                      | `1010`           |
 | `pb`         | Page table base register - Points to the start of the page directory.                      | `1011`           |
 | `sy`         | System info register - Contains address of interrupt tables and the current user mode      | `1100`           |
-| `fp`         | Frame Pointer - Points to the beginning of the current stack frame.                        | `1001`           |
+| `fp`         | Frame Pointer - Points to the beginning of the current stack frame.                        | `1101`           |
 | `h0` to `h1` | Hardware Register - These registers are reserved for specific hardware functions.          | `1110` to `1111` |
 
 

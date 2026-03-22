@@ -49,6 +49,7 @@ Conditions are evaluated from the `zero` and `negative` flags:
 ## Instructions Using This System
 - **CMP** (Compare): Performs comparison and updates `cr`, but does not branch.
 - **CSKIP** (Conditional Skip): Performs comparison and skips the next instruction if the condition is met.
+- **Compare Results**: Evaluates `cr` and writes a boolean result to a register.
 
 ## Notes
 - Comparisons are always signed 64-bit integer comparisons.

@@ -44,8 +44,6 @@ pub fn resolve_required_register_argument_value(cpu: &mut MapleCPU, argument: u6
 }
 
 pub fn place_value_in_binary_from_right(value: u64, position: u8, slice_size: u8) -> u64 {
-    let position = 64 - position - slice_size;
-
     if position > 64 {
         panic!("Position provided may not be smaller than 0.")
     }
@@ -54,7 +52,7 @@ pub fn place_value_in_binary_from_right(value: u64, position: u8, slice_size: u8
 }
 
 pub fn place_value_in_binary_from_left(value: u64, position: u8, slice_size: u8) -> u64 {
-    (value & 2_u64.pow(slice_size as u32)) << position
+    (value & (2_u64.pow(slice_size as u32) - 1)) << position
 }
 
 pub fn get_conditional_result(cpu: &MapleCPU) -> ConditionalResult {

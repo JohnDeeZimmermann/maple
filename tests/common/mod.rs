@@ -25,6 +25,7 @@ pub const OP_CODE_STORE_MEMORY: u8 = 20;
 pub const OP_CODE_POP_PUSH: u8 = 21;
 pub const OP_CODE_EXIT: u8 = 22;
 pub const OP_CODE_SOFTWARE_INTERRUPT: u8 = 24;
+pub const OP_CODE_RETURN_FROM_INTERRUPT: u8 = 25;
 
 pub fn new_cpu_and_memory() -> (MapleCPU, Memory) {
     // All instruction tests run in kernel mode with PC starting at 0.
@@ -32,7 +33,7 @@ pub fn new_cpu_and_memory() -> (MapleCPU, Memory) {
     cpu.mode = ExecutionMode::Kernel;
     cpu.set_program_counter(0);
 
-    let memory = Memory::new(256);
+    let memory = Memory::new(512);
 
     (cpu, memory)
 }

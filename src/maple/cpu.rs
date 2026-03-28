@@ -3,16 +3,18 @@ use crate::maple::interrupt_codes::{
     INTERRUPT_CODE_ILLEGAL_REGISTER_MODIFICATION, INTERRUPT_CODE_INVALID_INTERRUPT_CODE,
 };
 use crate::maple::memory::Memory;
-use crate::maple::utils::{extract_from_binary_left, place_value_in_binary_from_right};
+use crate::maple::utils::{
+    extract_from_binary_left, extract_from_binary_right, place_value_in_binary_from_right,
+};
 use std::cmp::PartialEq;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub enum ExecutionMode {
     User,
     Kernel,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub enum ExecutionResult {
     Ok,
     Exit,
@@ -75,10 +77,14 @@ impl MapleCPU {
         let result = interrupt_table_base + code;
 
         self.mode = ExecutionMode::Kernel;
-
-        // OLD_PC
-        place_value_in_binary_from_right(self.get_program_counter(), 0, 32);
+        self.update_old_pc();
         self.set_program_counter(result as u64);
+    }
+
+    fn update_old_pc(&mut self) {
+        let old_pc = place_value_in_binary_from_right(self.get_program_counter(), 0, 32);
+        let new_sy = (0xFFFFFFFF00000000 & self.get_system_info()) | old_pc;
+        self.set_system_info(new_sy);
     }
 
     pub fn get_stack_pointer(&self) -> u64 {
@@ -172,6 +178,21 @@ impl MapleCPU {
             return self.registers[register as usize];
         }
         0
+    }
+
+    pub fn get_interrupt_table_base(&self) -> u64 {
+        let raw = self.get_system_info();
+        return extract_from_binary_left(raw, 16, 0);
+    }
+
+    pub fn get_interrupt_table_size(&self) -> u64 {
+        let raw = self.get_system_info();
+        return extract_from_binary_left(raw, 16, 16);
+    }
+
+    pub fn get_old_program_counter(&self) -> u64 {
+        let raw = self.get_system_info();
+        return extract_from_binary_right(raw, 32, 0);
     }
 
     pub fn set_register(&mut self, register: u8, value: u64) {

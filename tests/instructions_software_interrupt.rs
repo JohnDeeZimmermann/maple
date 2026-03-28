@@ -56,15 +56,14 @@ fn swi_switches_to_kernel_mode() {
 #[test]
 fn swi_stores_old_pc_in_system_info() {
     let (mut cpu, mut memory) = new_cpu_and_memory();
-    cpu.set_program_counter(0x1234);
+    cpu.set_program_counter(10);
     configure_interrupt_table(&mut cpu, 100, 10);
     let instruction = swi_instruction(encode_direct_argument(5));
 
     execute_single_instruction(&mut cpu, &mut memory, instruction);
 
-    let system_info = cpu.get_system_info();
-    let old_pc = system_info & 0xFFFF_FFFF;
-    assert_eq!(old_pc, 0x1234);
+    let old_pc = cpu.get_old_program_counter();
+    assert_eq!(old_pc, 10);
 }
 
 #[test]

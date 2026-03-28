@@ -70,6 +70,7 @@ pub struct AppState {
     pub dynamic_link: u64,
     pub page_table_base: u64,
     pub interrupt_table_base: u64,
+    pub steps_to_execute: u32,
 }
 
 pub fn app(terminal: &mut DefaultTerminal) -> std::io::Result<()> {
@@ -93,9 +94,18 @@ pub fn app(terminal: &mut DefaultTerminal) -> std::io::Result<()> {
         dynamic_link: 0,
         page_table_base: 0,
         interrupt_table_base: 0,
+        steps_to_execute: 0,
     };
 
     loop {
+        while state.steps_to_execute > 0 {
+            let result = cpu.process(&mut memory);
+            state.steps_to_execute -= 1;
+            if result == crate::maple::cpu::ExecutionResult::Exit {
+                break;
+            }
+        }
+
         sync_state_from_cpu(&mut state, &cpu);
         terminal.draw(|frame| render(frame, &mut state, &memory))?;
 
@@ -174,8 +184,8 @@ fn render_register_list(frame: &mut Frame, area: Rect, state: &AppState) {
     frame.render_widget(block, area);
 }
 
-fn render_footer(frame: &mut Frame, area: Rect, state: &AppState) {
-    let status_text = "C-M: Memory | C-R: Registers | C-Q: Quit";
+fn render_footer(frame: &mut Frame, area: Rect, _state: &AppState) {
+    let status_text = "Enter: Step | C-M: Memory | C-R: Registers | C-Q: Quit";
 
     let footer = Block::default().title("Actions").borders(Borders::ALL);
 

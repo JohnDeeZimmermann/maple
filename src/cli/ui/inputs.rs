@@ -13,6 +13,11 @@ pub fn handle_input(key: KeyEvent, state: &mut AppState) -> bool {
         return true;
     }
 
+    if key.code == KeyCode::Enter {
+        state.steps_to_execute += 1;
+        return false;
+    }
+
     false
 }
 

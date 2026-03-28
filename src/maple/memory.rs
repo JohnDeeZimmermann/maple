@@ -15,18 +15,22 @@ impl Memory {
 }
 
 impl Memory {
-    fn get(&self, memory_address: u32) -> u64 {
+    pub fn get(&self, memory_address: u32) -> u64 {
         if memory_address >= self.memory.len() as u32 {
             panic!("Memory access out of bounds");
         }
         self.memory[memory_address as usize]
     }
 
-    fn set(&mut self, memory_address: u32, value: u64) {
+    pub fn set(&mut self, memory_address: u32, value: u64) {
         if memory_address >= self.memory.len() as u32 {
             panic!("Memory access out of bounds");
         }
         self.memory[memory_address as usize] = value;
+    }
+
+    pub fn get_size(&self) -> u32 {
+        return self.memory.len() as u32;
     }
 
     pub fn virtual_to_physical(&self, address: u32, cpu: &mut MapleCPU) -> u32 {

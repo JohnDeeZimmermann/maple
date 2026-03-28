@@ -1,3 +1,5 @@
+use maple::cli::app::app;
+
 fn main() {
-    println!("Hello, world!");
+    ratatui::run(app).unwrap();
 }

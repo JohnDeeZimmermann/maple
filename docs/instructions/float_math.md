@@ -14,7 +14,11 @@ Uses the standard instruction format:
 OPCODE (8) | OPTIONS (4) | RDEST (4) | ARG1 (24) | ARG2 (24)
 ```
 
-(Opcode mapping for these instructions is defined outside this file.)
+OpCodes:
+- `0x06`: `ADDF`
+- `0x07`: `SUBF`
+- `0x08`: `MULF`
+- `0x09`: `DIVF`
 
 ## Parameters and Treatment
 1. `op_code` (8 bits)

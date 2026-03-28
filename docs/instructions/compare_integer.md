@@ -1,4 +1,4 @@
-# Compare Integer (CMP)
+# Compare Integer (CMPI)
 
 ## Purpose
 Performs a signed 64-bit integer comparison between two operands and updates the `cr` (condition result) register with the comparison flags. This instruction does not write to any general-purpose register or modify the program counter.
@@ -10,12 +10,12 @@ OPCODE (8) | OPTIONS (4) | RDEST (4) | ARG1 (24) | ARG2 (24)
 ```
 
 OpCode:
-- `0x07`: `CMP`
+- `0x0B`: `CMPI`
 
 ## Parameters and Treatment
 
 1. `op_code` (8 bits)
-   - Must be `0x07` to select compare integer.
+    - Must be `0x0B` to select compare integer.
 
 2. `options` (4 bits)
    - Decoded but currently unused by compare execution.

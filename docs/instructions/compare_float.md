@@ -10,12 +10,12 @@ OPCODE (8) | OPTIONS (4) | RDEST (4) | ARG1 (24) | ARG2 (24)
 ```
 
 OpCode:
-- `0x08`: `CMPF`
+- `0x0C`: `CMPF`
 
 ## Parameters and Treatment
 
 1. `op_code` (8 bits)
-   - Must be `0x08` to select compare float.
+    - Must be `0x0C` to select compare float.
 
 2. `options` (4 bits)
    - Decoded but currently unused by compare execution.

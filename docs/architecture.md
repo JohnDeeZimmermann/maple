@@ -1,7 +1,7 @@
 # Memory
 
 Even though instructions, registers and data stored are defined as 64 bit values, the address space of our memory is limited to 32 bit.
-This includes both program code and data values. The _Stack_ shrinks.
+This includes both program code and data values.
 
 ## Pages
 
@@ -68,7 +68,7 @@ We have several general-purpose registers `r0` to `r5`. These can be used for an
 # Modes
 
 The CPU operates in two modes: User Mode and Kernel Mode.
-In User Mode, certain instructions are disallowed and memory addresses are virtual and then mapped to their respective physcial addresses.
+In User Mode, certain instructions are disallowed and memory addresses are virtual and then mapped to their respective physical addresses.
 System calls can be used to switch to kernel mode.
 
 # Things to keep in mind

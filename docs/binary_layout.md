@@ -1,5 +1,5 @@
 # Binary Layout
-This is a description on how the binary layout of each instruction is supposed to look like. 
+This document describes the binary layout of each instruction. 
 ### General Layout
 We have 64-bit available for each instruction. The general layout we look for is:
 ```

@@ -11,6 +11,7 @@ use crate::cli::{
     setup::setup_system,
     ui::{inputs::handle_input, memory_list::render_memory_list},
 };
+use crate::maple::cpu::MapleCPU;
 use crate::maple::memory::Memory;
 
 #[derive(Debug, PartialEq)]
@@ -64,12 +65,17 @@ pub struct AppState {
     pub format_memory_addresses: BinaryFormat,
     pub format_memory: BinaryFormat,
     pub format_registers: BinaryFormat,
+    pub stack_pointer: u64,
+    pub frame_pointer: u64,
+    pub dynamic_link: u64,
+    pub page_table_base: u64,
+    pub interrupt_table_base: u64,
 }
 
 pub fn app(terminal: &mut DefaultTerminal) -> std::io::Result<()> {
     let max_address = 8196;
 
-    let (_cpu, mut memory) = setup_system(max_address);
+    let (mut cpu, mut memory) = setup_system(max_address);
 
     let mut state = AppState {
         selected_address: 0,
@@ -82,9 +88,15 @@ pub fn app(terminal: &mut DefaultTerminal) -> std::io::Result<()> {
         format_memory_addresses: BinaryFormat::Hex,
         format_memory: BinaryFormat::Decimal,
         format_registers: BinaryFormat::Decimal,
+        stack_pointer: 0,
+        frame_pointer: 0,
+        dynamic_link: 0,
+        page_table_base: 0,
+        interrupt_table_base: 0,
     };
 
     loop {
+        sync_state_from_cpu(&mut state, &cpu);
         terminal.draw(|frame| render(frame, &mut state, &memory))?;
 
         if let Event::Key(key) = event::read()? {
@@ -93,6 +105,15 @@ pub fn app(terminal: &mut DefaultTerminal) -> std::io::Result<()> {
             }
         }
     }
+}
+
+fn sync_state_from_cpu(state: &mut AppState, cpu: &MapleCPU) {
+    state.program_counter = cpu.get_program_counter();
+    state.stack_pointer = cpu.get_stack_pointer();
+    state.frame_pointer = cpu.get_frame_pointer();
+    state.dynamic_link = cpu.get_dynamic_link();
+    state.page_table_base = cpu.get_page_table_base();
+    state.interrupt_table_base = cpu.get_interrupt_table_base();
 }
 
 fn render(frame: &mut Frame, state: &mut AppState, memory: &Memory) {

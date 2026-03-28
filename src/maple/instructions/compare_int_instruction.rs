@@ -1,4 +1,8 @@
-use crate::maple::{cpu::MapleCPU, instructions::instructions::{InstructionArguments, perform_int_compare}, utils::resolve_potential_register_argument_value};
+use crate::maple::{
+    cpu::MapleCPU,
+    instructions::instructions::{perform_int_compare, InstructionArguments},
+    utils::resolve_potential_register_argument_value,
+};
 
 pub fn execute_compare_int_instruction(cpu: &mut MapleCPU, args: &InstructionArguments) {
     let a = resolve_potential_register_argument_value(cpu, args.arg1_raw as u64);

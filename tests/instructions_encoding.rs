@@ -31,11 +31,8 @@ fn create_basic_instruction_truncates_inputs_to_field_widths() {
     };
 
     let instruction = create_basic_instruction(args);
-    let expected = (0xFF_u64 << 56)
-        | (0xF_u64 << 52)
-        | (0xF_u64 << 48)
-        | (0xFF_FFFF_u64 << 24)
-        | 0xCDEF12_u64;
+    let expected =
+        (0xFF_u64 << 56) | (0xF_u64 << 52) | (0xF_u64 << 48) | (0xFF_FFFF_u64 << 24) | 0xCDEF12_u64;
 
     assert_eq!(instruction, expected);
 }

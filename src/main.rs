@@ -1,4 +1,4 @@
-use maple::cli::app::app;
+use maple::cli::ui::app::app;
 
 fn main() {
     ratatui::run(app).unwrap();

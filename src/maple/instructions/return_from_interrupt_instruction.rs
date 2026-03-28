@@ -1,7 +1,6 @@
 use crate::maple::cpu::{ExecutionMode, MapleCPU};
-use crate::maple::instructions::instructions::InstructionArguments;
 
-pub fn execute_return_from_interrupt_instruction(cpu: &mut MapleCPU, args: &InstructionArguments) {
+pub fn execute_return_from_interrupt_instruction(cpu: &mut MapleCPU) {
     let address = cpu.get_old_program_counter();
 
     cpu.mode = ExecutionMode::User;

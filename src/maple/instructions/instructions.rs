@@ -161,7 +161,7 @@ pub fn execute_instruction(
             execute_software_interrupt_instruction(cpu, &args);
         }
         OP_CODE_RETURN_FROM_INTERRUPT => {
-            execute_return_from_interrupt_instruction(cpu, &args);
+            execute_return_from_interrupt_instruction(cpu);
         }
         _ => {
             cpu.raise_interrupt(INTERRUPT_CODE_INVALID_OPCODE);

@@ -2,7 +2,7 @@ use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
 use crate::cli::ui::app::{AppState, PaneKind};
 
-const PADDING: u32 = 5;
+const PADDING: u32 = 10;
 
 pub fn handle_memory_pane_input(key: KeyEvent, state: &mut AppState) -> bool {
     // Memory pane specific inputs

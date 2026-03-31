@@ -9,7 +9,7 @@ use ratatui::{
 
 use crate::cli::{
     setup::setup_system,
-    ui::{inputs::handle_input, memory_list::render_memory_list},
+    ui::{inputs::inputs::handle_input, memory_list::render_memory_list, register_list::render_register_list},
 };
 use crate::maple::cpu::MapleCPU;
 use crate::maple::memory::Memory;
@@ -60,11 +60,13 @@ pub struct AppState {
     pub selected_register: u32,
     pub memory_scroll_offset: u32,
     pub memory_scroll_visible_rows: u32,
+    pub register_scroll_offset: u32,
+    pub register_scroll_visible_rows: u32,
     pub program_counter: u64,
     pub max_address: u32,
     pub format_memory_addresses: BinaryFormat,
     pub format_memory: BinaryFormat,
-    pub format_registers: BinaryFormat,
+    pub format_register_values: BinaryFormat,
     pub stack_pointer: u64,
     pub frame_pointer: u64,
     pub dynamic_link: u64,
@@ -83,12 +85,14 @@ pub fn app(terminal: &mut DefaultTerminal) -> std::io::Result<()> {
         selected_register: 0,
         memory_scroll_offset: 0,
         memory_scroll_visible_rows: 0,
+        register_scroll_offset: 0,
+        register_scroll_visible_rows: 0,
         program_counter: 0,
         max_address,
         active_pane: PaneKind::MemoryList,
         format_memory_addresses: BinaryFormat::Hex,
         format_memory: BinaryFormat::Decimal,
-        format_registers: BinaryFormat::Decimal,
+        format_register_values: BinaryFormat::Decimal,
         stack_pointer: 0,
         frame_pointer: 0,
         dynamic_link: 0,
@@ -107,7 +111,7 @@ pub fn app(terminal: &mut DefaultTerminal) -> std::io::Result<()> {
         }
 
         sync_state_from_cpu(&mut state, &cpu);
-        terminal.draw(|frame| render(frame, &mut state, &memory))?;
+        terminal.draw(|frame| render(frame, &mut state, &memory, &cpu))?;
 
         if let Event::Key(key) = event::read()? {
             if handle_input(key, &mut state) {
@@ -126,7 +130,7 @@ fn sync_state_from_cpu(state: &mut AppState, cpu: &MapleCPU) {
     state.interrupt_table_base = cpu.get_interrupt_table_base();
 }
 
-fn render(frame: &mut Frame, state: &mut AppState, memory: &Memory) {
+fn render(frame: &mut Frame, state: &mut AppState, memory: &Memory, cpu: &MapleCPU) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
@@ -141,7 +145,7 @@ fn render(frame: &mut Frame, state: &mut AppState, memory: &Memory) {
     let footer = chunks[2];
 
     render_header(frame, header);
-    render_content(frame, content, state, memory);
+    render_content(frame, content, state, memory, cpu);
     render_footer(frame, footer, state);
 }
 
@@ -150,7 +154,7 @@ fn render_header(frame: &mut Frame, area: Rect) {
     frame.render_widget(header, area);
 }
 
-fn render_content(frame: &mut Frame, area: Rect, state: &mut AppState, memory: &Memory) {
+fn render_content(frame: &mut Frame, area: Rect, state: &mut AppState, memory: &Memory, cpu: &MapleCPU) {
     let block = Block::default();
 
     let inner = block.inner(area);
@@ -166,22 +170,7 @@ fn render_content(frame: &mut Frame, area: Rect, state: &mut AppState, memory: &
     let register_list = chunks[1];
 
     render_memory_list(frame, memory_list, state, memory);
-    render_register_list(frame, register_list, state);
-}
-
-fn render_register_list(frame: &mut Frame, area: Rect, state: &AppState) {
-    let border_style = if state.active_pane == PaneKind::RegisterList {
-        Style::default().fg(Color::Green)
-    } else {
-        Style::default().fg(Color::Gray)
-    };
-
-    let block = Block::default()
-        .title("Registers")
-        .borders(Borders::ALL)
-        .border_style(border_style);
-
-    frame.render_widget(block, area);
+    render_register_list(frame, register_list, state, cpu);
 }
 
 fn render_footer(frame: &mut Frame, area: Rect, _state: &AppState) {
@@ -198,4 +187,20 @@ fn render_footer(frame: &mut Frame, area: Rect, _state: &AppState) {
     )]);
     let paragraph = Paragraph::new(line);
     frame.render_widget(paragraph, inner);
+}
+
+pub fn format_address(value: u64, format: &BinaryFormat) -> String {
+    match format {
+        BinaryFormat::Hex => format!("0x{:08X}", value),
+        BinaryFormat::Decimal => format!("{:10}", value),
+        BinaryFormat::Binary => format!("0b{:032b}", value),
+    }
+}
+
+pub fn format_value(value: u64, format: &BinaryFormat) -> String {
+    match format {
+        BinaryFormat::Hex => format!("0x{:016X}", value),
+        BinaryFormat::Decimal => format!("{}", value),
+        BinaryFormat::Binary => format!("0b{:064b}", value),
+    }
 }

@@ -6,7 +6,7 @@ use ratatui::{
     Frame,
 };
 
-use crate::cli::ui::app::{AppState, BinaryFormat, PaneKind};
+use crate::cli::ui::app::{AppState, BinaryFormat, PaneKind, format_address, format_value};
 use crate::maple::memory::Memory;
 
 struct RegisterMarker {
@@ -72,22 +72,6 @@ pub fn render_memory_list(frame: &mut Frame, area: Rect, state: &mut AppState, m
 
     let paragraph = Paragraph::new(lines);
     frame.render_widget(paragraph, inner);
-}
-
-fn format_address(value: u64, format: &BinaryFormat) -> String {
-    match format {
-        BinaryFormat::Hex => format!("0x{:08X}", value),
-        BinaryFormat::Decimal => format!("{:10}", value),
-        BinaryFormat::Binary => format!("0b{:032b}", value),
-    }
-}
-
-fn format_value(value: u64, format: &BinaryFormat) -> String {
-    match format {
-        BinaryFormat::Hex => format!("0x{:016X}", value),
-        BinaryFormat::Decimal => format!("{}", value),
-        BinaryFormat::Binary => format!("0b{:064b}", value),
-    }
 }
 
 fn get_register_markers(state: &AppState, address: u64) -> Vec<RegisterMarker> {

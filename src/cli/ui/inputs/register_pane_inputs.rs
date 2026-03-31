@@ -12,13 +12,15 @@ pub fn handle_register_pane_input(key: KeyEvent, state: &mut AppState) -> bool {
     match key.code {
         KeyCode::Up => handle_up(state),
         KeyCode::Down => handle_down(state),
-        KeyCode::Tab => {
-            state.format_register_values = state.format_register_values.cycle();
-        }
+        KeyCode::Tab => handle_tab(state),
         _ => {}
     }
 
     return false;
+}
+
+fn handle_tab(state: &mut AppState) {
+    state.format_register_values = state.format_register_values.cycle();
 }
 
 fn handle_up(state: &mut AppState) {

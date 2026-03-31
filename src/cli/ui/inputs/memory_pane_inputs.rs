@@ -14,17 +14,19 @@ pub fn handle_memory_pane_input(key: KeyEvent, state: &mut AppState) -> bool {
     match key.code {
         KeyCode::Up => handle_up(state),
         KeyCode::Down => handle_down(state),
-        KeyCode::Tab => {
-            if key.modifiers.contains(KeyModifiers::SHIFT) {
-                state.format_memory_addresses = state.format_memory_addresses.cycle();
-            } else {
-                state.format_memory = state.format_memory.cycle();
-            }
-        }
+        KeyCode::Tab => handle_tab(key, state),
         _ => {}
     }
 
     false
+}
+
+fn handle_tab(key: KeyEvent, state: &mut AppState) {
+    if key.modifiers.contains(KeyModifiers::SHIFT) {
+        state.format_memory_addresses = state.format_memory_addresses.cycle();
+    } else {
+        state.format_memory = state.format_memory.cycle();
+    }
 }
 
 fn handle_up(state: &mut AppState) {

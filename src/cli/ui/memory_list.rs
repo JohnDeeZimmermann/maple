@@ -6,7 +6,7 @@ use ratatui::{
     Frame,
 };
 
-use crate::cli::ui::app::{AppState, BinaryFormat, PaneKind, format_address, format_value};
+use crate::cli::ui::state::{format_address, format_value, AppState, PaneKind};
 use crate::maple::memory::Memory;
 
 struct RegisterMarker {

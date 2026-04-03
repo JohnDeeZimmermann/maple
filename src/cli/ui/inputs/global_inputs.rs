@@ -1,7 +1,6 @@
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
-use crate::cli::ui::app::{AppState, PaneKind};
-
+use crate::cli::ui::state::{AppState, PaneKind};
 
 pub fn handle_global_inputs(key: KeyEvent, state: &mut AppState) -> bool {
     // Global shortcuts
@@ -19,7 +18,7 @@ pub fn handle_global_inputs(key: KeyEvent, state: &mut AppState) -> bool {
             _ => {}
         }
     }
-    
+
     if key.code == KeyCode::Enter {
         state.steps_to_execute += 1;
         return false;

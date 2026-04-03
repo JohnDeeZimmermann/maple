@@ -1,14 +1,18 @@
 use ratatui::crossterm::event::KeyEvent;
 
-use crate::cli::ui::{app::{AppState, PaneKind}, inputs::{global_inputs::handle_global_inputs, memory_pane_inputs::handle_memory_pane_input, register_pane_inputs::handle_register_pane_input}};
-
+use crate::cli::ui::{
+    inputs::{
+        global_inputs::handle_global_inputs, memory_pane_inputs::handle_memory_pane_input,
+        register_pane_inputs::handle_register_pane_input,
+    },
+    state::{AppState, PaneKind},
+};
 
 pub fn handle_input(key: KeyEvent, state: &mut AppState) -> bool {
-    
     match state.active_pane {
         PaneKind::RegisterList => {
             if handle_register_pane_input(key, state) {
-                return true
+                return true;
             }
         }
         PaneKind::MemoryList => {
@@ -16,14 +20,12 @@ pub fn handle_input(key: KeyEvent, state: &mut AppState) -> bool {
                 return true;
             }
         }
-        PaneKind::CommandLine => { }
+        PaneKind::CommandLine => {}
     }
 
     if handle_global_inputs(key, state) {
         return true;
     }
-    
+
     false
 }
-
-

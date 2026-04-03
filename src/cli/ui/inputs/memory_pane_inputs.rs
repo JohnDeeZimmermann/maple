@@ -1,6 +1,6 @@
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
-use crate::cli::ui::app::{AppState, PaneKind};
+use crate::cli::ui::state::{AppState, PaneKind};
 
 const PADDING: u32 = 10;
 

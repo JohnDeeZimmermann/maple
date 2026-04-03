@@ -7,7 +7,7 @@ use ratatui::{
 };
 
 use crate::{
-    cli::ui::app::{format_value, AppState, PaneKind},
+    cli::ui::state::{format_value, AppState, PaneKind},
     maple::cpu::MapleCPU,
 };
 

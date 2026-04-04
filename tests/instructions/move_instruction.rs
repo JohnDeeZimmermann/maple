@@ -1,6 +1,4 @@
-mod common;
-
-use common::{encode_move_instruction, execute_single_instruction, new_cpu_and_memory};
+use crate::common::{encode_move_instruction, execute_single_instruction, new_cpu_and_memory};
 
 #[test]
 fn mov_direct_value_writes_destination_register() {

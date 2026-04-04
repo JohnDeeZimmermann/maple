@@ -1,6 +1,4 @@
-mod common;
-
-use common::{
+use crate::common::{
     encode_basic_instruction, encode_direct_argument, encode_register_argument,
     execute_single_instruction, new_cpu_and_memory, OP_CODE_LOAD_REGISTER,
 };

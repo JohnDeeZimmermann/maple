@@ -1,6 +1,4 @@
-mod common;
-
-use common::{
+use crate::common::{
     encode_basic_instruction, execute_single_instruction, new_cpu_and_memory, OP_CODE_EXIT,
 };
 use maple::maple::cpu::{ExecutionMode, ExecutionResult};

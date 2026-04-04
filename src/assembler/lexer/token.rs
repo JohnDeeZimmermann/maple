@@ -1,0 +1,15 @@
+pub enum Token {
+    Number(i64),
+    Instruction(String),
+    PreAssemblerInstruction(String),
+    Identifier(String),
+    String(String),
+    Plus,
+    Minus,
+    At,
+    Hash,
+    Dot,
+    Comma,
+    ColonDollar,
+    EOL,
+}

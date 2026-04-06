@@ -82,12 +82,12 @@ pub fn lex(input: &str) -> Vec<Token> {
     tokens
 }
 
-fn is_comment_start(chars: &Peekable<Chars<'_>>) -> bool {
+fn is_comment_start(chars: &Peekable<Chars>) -> bool {
     let mut iter = chars.clone();
     matches!(iter.next(), Some('/')) && matches!(iter.next(), Some('/'))
 }
 
-fn consume_comment(chars: &mut Peekable<Chars<'_>>) {
+fn consume_comment(chars: &mut Peekable<Chars>) {
     while let Some(&ch) = chars.peek() {
         if ch == '\n' {
             break;
@@ -97,7 +97,7 @@ fn consume_comment(chars: &mut Peekable<Chars<'_>>) {
     }
 }
 
-fn try_consume_colon_dollar(chars: &mut Peekable<Chars<'_>>) -> bool {
+fn try_consume_colon_dollar(chars: &mut Peekable<Chars>) -> bool {
     let mut iter = chars.clone();
     match (iter.next(), iter.next()) {
         (Some('$'), Some(':')) | (Some(':'), Some('$')) => {
@@ -109,7 +109,7 @@ fn try_consume_colon_dollar(chars: &mut Peekable<Chars<'_>>) -> bool {
     }
 }
 
-fn read_string(chars: &mut Peekable<Chars<'_>>) -> String {
+fn read_string(chars: &mut Peekable<Chars>) -> String {
     chars.next();
 
     let mut value = String::new();
@@ -130,7 +130,7 @@ fn read_string(chars: &mut Peekable<Chars<'_>>) -> String {
     value
 }
 
-fn read_number(chars: &mut Peekable<Chars<'_>>) -> Option<i64> {
+fn read_number(chars: &mut Peekable<Chars>) -> Option<i64> {
     let first = chars.next()?;
 
     if first == '0' {
@@ -162,7 +162,7 @@ fn read_number(chars: &mut Peekable<Chars<'_>>) -> Option<i64> {
     literal.parse::<i64>().ok()
 }
 
-fn read_prefixed_number<F>(chars: &mut Peekable<Chars<'_>>, radix: u32, is_digit: F) -> Option<i64>
+fn read_prefixed_number<F>(chars: &mut Peekable<Chars>, radix: u32, is_digit: F) -> Option<i64>
 where
     F: Fn(char) -> bool,
 {
@@ -192,7 +192,7 @@ fn is_identifier_char(ch: char) -> bool {
     ch.is_ascii_alphanumeric() || ch == '_' || ch == '/' || ch == '\\'
 }
 
-fn read_identifier(chars: &mut Peekable<Chars<'_>>) -> String {
+fn read_identifier(chars: &mut Peekable<Chars>) -> String {
     let mut identifier = String::new();
     while let Some(&ch) = chars.peek() {
         if is_identifier_char(ch) {
@@ -214,7 +214,7 @@ fn classify_identifier(identifier: String, tokens: &[Token]) -> Token {
 
     if is_instruction(&identifier) {
         Token::Instruction(identifier)
-    } else if is_pre_assembler_instruction(&identifier)  {
+    } else if is_pre_assembler_instruction(&identifier) {
         Token::PreAssemblerInstruction(identifier)
     } else {
         Token::Identifier(identifier)
@@ -282,6 +282,9 @@ fn is_instruction(value: &str) -> bool {
 
 fn is_pre_assembler_instruction(value: &str) -> bool {
     let upper = value.to_ascii_uppercase();
-    
-    matches!( upper.as_str(), "IMPORT" | "INCLUDE" | "FILE" | "EXPORT" | "AS" )
+
+    matches!(
+        upper.as_str(),
+        "IMPORT" | "INCLUDE" | "FILE" | "EXPORT" | "AS"
+    )
 }

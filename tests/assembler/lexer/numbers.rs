@@ -87,6 +87,21 @@ fn lexes_zero_number_literal() {
 }
 
 #[test]
+fn lexes_negative_decimal_number_literal() {
+    let tokens = lex("ADDI r1, r2, #-5\n");
+
+    assert_instruction(&tokens[0], "ADDI");
+    assert_identifier(&tokens[1], "r1");
+    assert!(matches!(tokens[2], Token::Comma));
+    assert_identifier(&tokens[3], "r2");
+    assert!(matches!(tokens[4], Token::Comma));
+    assert!(matches!(tokens[5], Token::Hash));
+    assert!(matches!(tokens[6], Token::Minus));
+    assert_number(&tokens[7], 5);
+    assert_eol(&tokens[8]);
+}
+
+#[test]
 fn lexes_numbers_across_multiple_lines() {
     let tokens = lex("MOV r0, #1\nMOV r1, #0x10\nMOV r2, #0b11\n");
 

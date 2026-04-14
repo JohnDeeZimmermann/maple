@@ -54,6 +54,11 @@ pub fn encode_direct_argument(value: u32) -> u32 {
     (value & 0x7F_FFFF) << 1
 }
 
+pub fn encode_signed_direct_argument(value: i32) -> u32 {
+    // Integer-math immediates are decoded as signed 23-bit values.
+    ((value as u32) & 0x7F_FFFF) << 1
+}
+
 pub fn encode_register_argument(register: u8) -> u32 {
     // Register arguments set low bit to 1 and store register id in the next bits.
     (((register as u32) & 0xF) << 1) | 1

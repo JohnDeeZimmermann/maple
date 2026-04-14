@@ -8,7 +8,7 @@ Instructions follow the following format:
 
 `INSTR PARAM, PARAM, PARAM`
 
-whereas `PARAM` can be a register, denoted by their names, or they can be a direct value, denoted by a `#`, followed by the number, starting with `0b` for binary,`0x` for hexadecimal, or without any prefix for decimal values. 
+whereas `PARAM` can be a register, denoted by their names, or they can be a direct value, denoted by a `#`, followed by the number, starting with `0b` for binary, `0x` for hexadecimal, or without any prefix for decimal values. Decimal literals may also be negative, for example `#-5`.
 ### Comments
 Comments can be created with `//` followed by the comment. The comment's contents will be stripped during parsing. 
 
@@ -29,7 +29,7 @@ Example: `.LABEL B #17` would immediately jump to address of value 17 when jumpi
 In order to write data, just write nothing except the data into the line. 
 Floats are always indicated by entering a decimal value. 
 ##### Numeric Data
-Just as with instructions, numeric values are denoted by a `#`, followed by the number, starting with `0b` for binary,`0x` for hexadecimal, or without any prefix for decimal values.
+Just as with instructions, numeric values are denoted by a `#`, followed by the number, starting with `0b` for binary, `0x` for hexadecimal, or without any prefix for decimal values. Decimal literals may also be negative.
 ##### String Values
 In order to write Strings into memory, simply write the string in quotation marks. 
 The length of the string is always limited to 8 characters.

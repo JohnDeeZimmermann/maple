@@ -1,8 +1,9 @@
 use crate::common::{
     configure_interrupt_table, cr_negative, cr_overflow, cr_parity, cr_zero,
     encode_basic_instruction, encode_direct_argument, encode_register_argument,
-    execute_single_instruction, new_cpu_and_memory, OP_CODE_ADD_INTEGER, OP_CODE_DIVIDE_INTEGER,
-    OP_CODE_MULTIPLY_INTEGER, OP_CODE_SUBTRACT_INTEGER,
+    encode_signed_direct_argument, execute_single_instruction, new_cpu_and_memory,
+    OP_CODE_ADD_INTEGER, OP_CODE_DIVIDE_INTEGER, OP_CODE_MULTIPLY_INTEGER,
+    OP_CODE_SUBTRACT_INTEGER,
 };
 
 #[test]
@@ -123,6 +124,64 @@ fn register_and_mixed_operands_are_resolved_for_all_integer_math_operations() {
         assert_eq!(cpu.get_register(5), expected as u64);
         assert_eq!(cpu.get_program_counter(), 1);
     }
+}
+
+#[test]
+fn signed_direct_operands_are_supported_for_integer_math() {
+    let cases = [
+        (OP_CODE_ADD_INTEGER, -7_i32, 5_i32, -2_i64),
+        (OP_CODE_SUBTRACT_INTEGER, -7_i32, -5_i32, -2_i64),
+        (OP_CODE_MULTIPLY_INTEGER, -7_i32, 5_i32, -35_i64),
+        (OP_CODE_DIVIDE_INTEGER, -21_i32, 7_i32, -3_i64),
+    ];
+
+    for (op_code, a, b, expected) in cases {
+        let (mut cpu, mut memory) = new_cpu_and_memory();
+        let instruction = encode_basic_instruction(
+            op_code,
+            2,
+            encode_signed_direct_argument(a),
+            encode_signed_direct_argument(b),
+        );
+
+        execute_single_instruction(&mut cpu, &mut memory, instruction);
+
+        assert_eq!(cpu.get_register(2), expected as u64);
+        assert_eq!(cpu.get_program_counter(), 1);
+    }
+}
+
+#[test]
+fn signed_direct_operands_can_mix_with_register_operands() {
+    let (mut cpu, mut memory) = new_cpu_and_memory();
+    cpu.set_register(1, (-9_i64) as u64);
+    let instruction = encode_basic_instruction(
+        OP_CODE_ADD_INTEGER,
+        3,
+        encode_register_argument(1),
+        encode_signed_direct_argument(4),
+    );
+
+    execute_single_instruction(&mut cpu, &mut memory, instruction);
+
+    assert_eq!(cpu.get_register(3), (-5_i64) as u64);
+    assert_eq!(cpu.get_program_counter(), 1);
+}
+
+#[test]
+fn signed_direct_arguments_sign_extend_to_the_supported_23_bit_range() {
+    let (mut cpu, mut memory) = new_cpu_and_memory();
+    let instruction = encode_basic_instruction(
+        OP_CODE_ADD_INTEGER,
+        0,
+        encode_signed_direct_argument(-4_194_304),
+        encode_signed_direct_argument(1),
+    );
+
+    execute_single_instruction(&mut cpu, &mut memory, instruction);
+
+    assert_eq!(cpu.get_register(0), (-4_194_303_i64) as u64);
+    assert!(cr_negative(cpu.get_result_register()));
 }
 
 #[test]

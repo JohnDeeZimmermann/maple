@@ -1,11 +1,13 @@
 use crate::maple::cpu::MapleCPU;
 use crate::maple::instructions::instructions::InstructionArguments;
 use crate::maple::interrupt_codes::INTERRUPT_CODE_INVALID_DIVISION_BY_ZERO;
-use crate::maple::utils::{extract_from_binary_left, resolve_potential_register_argument_value};
+use crate::maple::utils::{
+    extract_from_binary_left, resolve_signed_potential_register_argument_value,
+};
 
 pub fn execute_add_integer_instruction(cpu: &mut MapleCPU, args: &InstructionArguments) {
-    let value_a = resolve_potential_register_argument_value(cpu, args.arg1_raw as u64) as i64;
-    let value_b = resolve_potential_register_argument_value(cpu, args.arg2_raw as u64) as i64;
+    let value_a = resolve_signed_potential_register_argument_value(cpu, args.arg1_raw as u64);
+    let value_b = resolve_signed_potential_register_argument_value(cpu, args.arg2_raw as u64);
 
     let (result, overflowed) = value_a.overflowing_add(value_b);
 
@@ -14,8 +16,8 @@ pub fn execute_add_integer_instruction(cpu: &mut MapleCPU, args: &InstructionArg
 }
 
 pub fn execute_subtract_integer_instruction(cpu: &mut MapleCPU, args: &InstructionArguments) {
-    let value_a = resolve_potential_register_argument_value(cpu, args.arg1_raw as u64) as i64;
-    let value_b = resolve_potential_register_argument_value(cpu, args.arg2_raw as u64) as i64;
+    let value_a = resolve_signed_potential_register_argument_value(cpu, args.arg1_raw as u64);
+    let value_b = resolve_signed_potential_register_argument_value(cpu, args.arg2_raw as u64);
 
     let (result, overflowed) = value_a.overflowing_sub(value_b);
 
@@ -24,8 +26,8 @@ pub fn execute_subtract_integer_instruction(cpu: &mut MapleCPU, args: &Instructi
 }
 
 pub fn execute_multiply_integer_instruction(cpu: &mut MapleCPU, args: &InstructionArguments) {
-    let value_a = resolve_potential_register_argument_value(cpu, args.arg1_raw as u64) as i64;
-    let value_b = resolve_potential_register_argument_value(cpu, args.arg2_raw as u64) as i64;
+    let value_a = resolve_signed_potential_register_argument_value(cpu, args.arg1_raw as u64);
+    let value_b = resolve_signed_potential_register_argument_value(cpu, args.arg2_raw as u64);
 
     let (result, overflowed) = value_a.overflowing_mul(value_b);
 
@@ -34,8 +36,8 @@ pub fn execute_multiply_integer_instruction(cpu: &mut MapleCPU, args: &Instructi
 }
 
 pub fn execute_divide_integer_instruction(cpu: &mut MapleCPU, args: &InstructionArguments) {
-    let value_a = resolve_potential_register_argument_value(cpu, args.arg1_raw as u64) as i64;
-    let value_b = resolve_potential_register_argument_value(cpu, args.arg2_raw as u64) as i64;
+    let value_a = resolve_signed_potential_register_argument_value(cpu, args.arg1_raw as u64);
+    let value_b = resolve_signed_potential_register_argument_value(cpu, args.arg2_raw as u64);
 
     if value_b == 0 {
         cpu.raise_interrupt(INTERRUPT_CODE_INVALID_DIVISION_BY_ZERO);

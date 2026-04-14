@@ -31,10 +31,10 @@ OpCodes:
 - Destination register for the arithmetic result.
 
 4. `arg1_raw`, `arg2_raw` (24 bits each)
-- Each operand is resolved by `resolve_potential_register_argument_value`:
+- Each operand is resolved by `resolve_signed_potential_register_argument_value`:
   - Bit 0 = `1`: operand is a register reference; register id comes from bits 4..1.
-  - Bit 0 = `0`: operand is a direct literal; value is `arg >> 1`.
-- Resolved operands are cast to `i64` before arithmetic.
+  - Bit 0 = `0`: operand is a direct literal; bits 23..1 are interpreted as a signed 23-bit integer and sign-extended to `i64`.
+- Register operands use the register's full 64-bit value, interpreted as `i64`.
 
 ## Execution (Shared Flow)
 ```text
@@ -66,3 +66,4 @@ cr = (cr & 0xFFFFFFFFFFFFFFF0) | parity<<3 | negative<<2 | zero<<1 | overflow
 ## Notes
 - Arithmetic is signed (`i64`) and wraps on overflow using Rust `overflowing_*` behavior.
 - Final register storage is raw 64-bit (`u64`) bit pattern of the signed result.
+- Signed direct literals are limited to the 23-bit range `[-4_194_304, 4_194_303]`.

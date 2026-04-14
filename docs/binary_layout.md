@@ -1,5 +1,5 @@
 # Binary Layout
-This document describes the binary layout of each instruction. 
+This document describes the binary layout of each instruction.
 ### General Layout
 We have 64-bit available for each instruction. The general layout we look for is:
 ```
@@ -11,11 +11,20 @@ Certain Operations will differ from this layout.
 `OPTIONS` contains additional information on the instruction. For example which _compare_ command should be executed.
 Each argument also contains an additional bit (to the right) which determines whether the argument is stored in a register or directly.
 
+For most instructions, direct arguments are decoded as unsigned payloads.
+Integer math instructions (`ADDI`, `SUBI`, `MULI`, `DIVI`) are the exception: they interpret bits 23..1 as a signed 23-bit immediate and sign-extend it to 64 bits.
+
 ##### Example
 `ADDI r1, r2, #16` would be represented as
 ```
 00000010 0000 0001 00000000000000000000010 1 00000000000000000010000 0
 OPCODE   OPT  DEST ARG1 (As register)      R ARG2 (Directly)         R
+```
+
+`ADDI r1, #-5, #2` stores `arg1` as the 23-bit two's-complement payload for `-5`, plus the trailing direct/register bit:
+```
+00000010 0000 0001 11111111111111111111011 0 00000000000000000000010 0
+OPCODE   OPT  DEST ARG1 (Directly, signed) R ARG2 (Directly)         R
 ```
 ### Move, Move Not
 ```

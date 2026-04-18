@@ -1,8 +1,4 @@
-use crate::assembler::parser::{
-    errors::parse_errors::ParseError,
-    nodes::{ast_node::AstNode, ast_value::AstValue, instruction::Instruction},
-    utils::mask_from_right,
-};
+use crate::assembler::{nodes::{ast_node::AstNode, ast_value::AstValue, instruction::Instruction}, parser::{errors::parse_errors::ParseError, utils::mask_from_right}};
 
 pub struct MovInstructionNode {
     instruction: Instruction,

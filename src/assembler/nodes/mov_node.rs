@@ -1,6 +1,10 @@
-use crate::assembler::{nodes::{ast_node::AstNode, ast_value::AstValue, instruction::Instruction}, parser::{errors::parse_errors::ParseError, utils::mask_from_right}};
+use crate::assembler::{
+    nodes::{ast_node::AstNode, ast_value::AstValue, instruction::Instruction},
+    parser::{errors::parse_errors::ParseError, utils::mask_from_right},
+};
 
 pub struct MovInstructionNode {
+    next: Box<dyn AstNode>,
     instruction: Instruction,
     target_register: AstValue,
     source_value: AstValue,
@@ -21,5 +25,9 @@ impl AstNode for MovInstructionNode {
         let result = (opcode << 56) | (option << 55) | (target_register << 51) | source_value;
 
         Ok(result)
+    }
+
+    fn next(&self) -> Option<&dyn AstNode> {
+        return Some(self.next.as_ref());
     }
 }

@@ -4,10 +4,10 @@ use crate::assembler::{
 };
 
 pub struct MovInstructionNode {
-    next: Box<dyn AstNode>,
-    instruction: Instruction,
-    target_register: AstValue,
-    source_value: AstValue,
+    pub next: Option<Box<dyn AstNode>>,
+    pub instruction: Instruction,
+    pub target_register: AstValue,
+    pub source_value: AstValue,
 }
 
 impl AstNode for MovInstructionNode {
@@ -28,6 +28,10 @@ impl AstNode for MovInstructionNode {
     }
 
     fn next(&self) -> Option<&dyn AstNode> {
-        return Some(self.next.as_ref());
+        self.next.as_ref().map(|b| b.as_ref())
+    }
+
+    fn set_next(&mut self, node: Box<dyn AstNode>) {
+        self.next = Some(node);
     }
 }
